@@ -33,8 +33,8 @@ private:
     friend class ReducedConcatStringTree;
 };
 
-class ReducedConcatStringTree /* */ {
-
+class ReducedConcatStringTree /* */ 
+{
 public:
     class LitStringHash {
     public:
