@@ -4,6 +4,9 @@
 #include "main.h"
 
 class ConcatStringTree {
+    class node; //forward declare
+    node *root;
+
 
 public:
     ConcatStringTree(const char * s);
@@ -18,6 +21,24 @@ public:
 
     int getParTreeSize(const string & query) const;
     string getParTreeStringPreOrder(const string & query) const;
+
+private:
+    class node
+    {
+        friend class ConcatStringTree;
+
+        int length{};
+        int leftLength{};
+        std::string data{};
+
+        node *left{};
+        node *right{};
+
+        node(): length{0}, leftLength{0}, data{""}, left{nullptr}, right{nullptr}
+        {}
+        
+
+    };
 };
 
 class ReducedConcatStringTree; // forward declaration
