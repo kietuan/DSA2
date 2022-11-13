@@ -7,13 +7,13 @@ class ConcatStringTree {
     class node; //forward declare
     node *root{};
     int size{};
-
+    int numOfnodes{};
 
 public:
     ConcatStringTree(const char * s);
     int length() const;
     char get(int index);
-    int indexOf(char c);
+    int indexOf(char c) ;
     string toStringPreOrder() const;
     string toString() const;
     ConcatStringTree concat(const ConcatStringTree & otherS) const;
@@ -24,6 +24,9 @@ public:
     string getParTreeStringPreOrder(const string & query) const;
 private:
     int recursiveLength(node* ) const;
+    char recursiveGet (int index, ConcatStringTree::node*);
+    void setSize();
+    int recursiveFind (char c, node* node, int currIndex, int& found);
 
 private:
     class node
@@ -32,17 +35,21 @@ private:
 
         int length{};
         int leftLength{};
+        int rightLength{}; 
         std::string data{};
 
         node *left{};
         node *right{};
 
-        node(): length{0}, leftLength{0}, data{""}, left{nullptr}, right{nullptr}
+        node(): length{0}, leftLength{0},rightLength{0}, data{""}, left{nullptr}, right{nullptr}
         {}
 
 
     };
 };
+
+
+
 
 class ReducedConcatStringTree; // forward declaration
 
