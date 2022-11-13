@@ -5,7 +5,8 @@
 
 class ConcatStringTree {
     class node; //forward declare
-    node *root;
+    node *root{};
+    int size{};
 
 
 public:
@@ -21,6 +22,8 @@ public:
 
     int getParTreeSize(const string & query) const;
     string getParTreeStringPreOrder(const string & query) const;
+private:
+    int recursiveLength(node* ) const;
 
 private:
     class node
@@ -36,7 +39,7 @@ private:
 
         node(): length{0}, leftLength{0}, data{""}, left{nullptr}, right{nullptr}
         {}
-        
+
 
     };
 };
