@@ -58,6 +58,6 @@ int ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &fou
         {
             found = (int)i + currIndex;
         }
-        recursiveFind(c, node->left, currIndex + node->rightLength, found);
+        recursiveFind(c, node->right, currIndex + node->rightLength, found);
     }
 }
