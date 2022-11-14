@@ -1,4 +1,4 @@
-#include "ConcatStringTree.h"
+#include "ConcatStringTree_ver2.h"
  
 long ConcatStringTree::node::maxID{0}; //because there is no before
 
@@ -242,21 +242,4 @@ void assignRight(node* p) //tương tự assignleft
     {
 
     }
-}
-
-
-int ConcatStringTree::avlTree::getSize (avlNode* root)
-{
-    if (!root) return 0;
-    return 1 + getSize(root->left) + getSize(root->right);
-}
-
-int ConcatStringTree::avlTree::getHeight (avlNode* root)
-{
-    if (!root) return 0;
-    if (!root->left && !root->right) return 0;
-
-    int a = getHeight(root->left);
-    int b = getHeight(root->right);
-    return 1 + ((a>b) ? a : b);
 }

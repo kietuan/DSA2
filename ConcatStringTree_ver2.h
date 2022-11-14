@@ -4,6 +4,29 @@
 
 #include "main.h"
 
+<template typename T>
+class BTree
+{
+public:
+    class node;
+
+    node* root{};
+    int numOfnodes{};
+
+    class node
+    {
+        T data{};
+        node* left;
+        node* right{};
+
+        node() : T{}, left{nullptr}, right{nullptr}
+        {}
+    };
+};
+
+
+
+
 class ConcatStringTree {
     class node; //forward declare
     class avlTree;
@@ -92,16 +115,7 @@ private:
         void insert(const node* node); //khi có node mới được trỏ vào node đang chứa avlTree hiện tại
         void recursiveInsert(const node* node, avlNode* root);
         void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa avlTree hiện tại nữa
-        int getSize() const
-        {
-            return getSize(this->root);
-        }
-        static int getSize(avlNode*);
-        int getHeight() const
-        {
-            return getHeight(this->root);
-        }
-        static int getHeight(avlNode*);
+
 
         class avlNode
         {
@@ -111,7 +125,7 @@ private:
             avlNode* left{};
             avlNode* right{};
 
-            avlNode(node* p = nullptr): data(p), left(nullptr), right(nullptr), balanceFactor{0}
+            avlNode(node* p = nullptr): data(p), left(nullptr), right(nullptr), balanceFactor{0};
             {}
         };
 
