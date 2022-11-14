@@ -89,19 +89,20 @@ private:
 
         avlTree(): size(0), root(nullptr)
         {}
-        void insert(const node* node); //khi có node mới được trỏ vào node đang chứa avlTree hiện tại
-        void recursiveInsert(const node* node, avlNode* root);
-        void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa avlTree hiện tại nữa
-        int getSize() const
-        {
-            return getSize(this->root);
-        }
+        //void insert(const node* node); //khi có node mới được trỏ vào node đang chứa avlTree hiện tại
+        //void recursiveInsert(const node* node, avlNode* root);
+        int getSize() const;
         static int getSize(avlNode*);
-        int getHeight() const
-        {
-            return getHeight(this->root);
-        }
-        static int getHeight(avlNode*);
+        int getHeight() const;
+        static int getHeight(avlNode*); //tính theo node
+        static void leftRotate(avlNode* &node); //we ensure that this is valid case
+        static void rightRotate(avlNode* &node);
+        void insert(const ConcatStringTree::node* node);
+        void recursiveInsert(avlNode*& root , const ConcatStringTree::node* node, bool& done);
+        static void balanceTree(avlNode*& node);
+        static void updateFactor( avlNode*& node);
+        void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa avlTree hiện tại nữa
+
 
         class avlNode
         {
@@ -114,9 +115,6 @@ private:
             avlNode(node* p = nullptr): data(p), left(nullptr), right(nullptr), balanceFactor{0}
             {}
         };
-
-        
-        
     };
 
 };
