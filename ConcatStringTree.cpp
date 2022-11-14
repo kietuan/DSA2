@@ -1,4 +1,6 @@
 #include "ConcatStringTree.h"
+ 
+long ConcatStringTree::node::maxID{0}; //because there is no before
 
 ConcatStringTree::ConcatStringTree(const char* c)
 {
@@ -213,4 +215,31 @@ ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* root) //trả v
 
     newnode->setLength();
     return newnode;
+}
+
+
+void ConcatStringTree::node::assignLeft(node* p)
+{
+    if (this->left == nullptr)
+    {
+        if (!p) return;
+
+        this->left = p;
+        .... thay đổi AVL của p -> viết thêm 2 hàm insert và remove cho AVL
+    }
+    else
+    {
+        ...thay đổi ParentsTree của this->left trước rồi gán qua p, rồi thay đổi AVL của p 
+    }
+}
+void assignRight(node* p) //tương tự assignleft
+{
+    if (this->right == nullptr)
+    {
+
+    }
+    else
+    {
+
+    }
 }

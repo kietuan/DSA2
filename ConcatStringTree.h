@@ -1,10 +1,12 @@
 #ifndef __CONCAT_STRING_TREE_H__
 #define __CONCAT_STRING_TREE_H__
+#define MAX 10000000
 
 #include "main.h"
 
 class ConcatStringTree {
     class node; //forward declare
+    class avlTree;
 
     node *root{};
     int size{};
@@ -39,8 +41,8 @@ private:
 private:
     class node
     {
-        friend class ConcatStringTree;
-
+        //friend class ConcatStringTree;
+    public: //có thể truy cập bằng enclosed nhưng không thể truy cập được ở bên ngoài
         std::string data{};
         int length{};
         int leftLength{};
@@ -49,11 +51,18 @@ private:
         node *left{};
         node *right{};
 
+        ConcatStringTree::avlTree* ParentsTree{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
+        long id{};
+        static long maxID;
+
         node(string str=""): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
         {
             length = str.length();
+            
+            if (maxID < MAX) id = ++maxID;
+            else throw overflow_error("Id is overflow!");
+            ParentsTree = new avlTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
-
         node (node* &other);
 
         int getLength(node*) const; //return the total length
@@ -62,7 +71,44 @@ private:
         {
             setLength(this);
         }
+
+        //bởi vì trong mỗi node sẽ chứa 1 cái ParentsTrees chỉ đến các node mà là node cha của nó, tức là chỉ thẳng đến nó, nên ta
+        //sẽ không gán con trỏ left, right một cách tường minh nữa, ta sẽ tạo một function gán left right cho nó và làm hết mọi việc thay đổi cái AVLtreee
+        //
+        void assignLeft(node* p);
+        void assignRight(node* p);
     };
+
+    class avlTree
+    {
+    public:
+        class avlNode;
+
+        avlNode *root{};
+        int size{};
+
+        avlTree(): size(0), root(nullptr)
+        {}
+        void insert(const node* node); //khi có node mới được trỏ vào node đang chứa avlTree hiện tại
+        void recursiveInsert(const node* node, avlNode* root);
+        void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa avlTree hiện tại nữa
+
+
+        class avlNode
+        {
+        public:
+            ConcatStringTree::node* data{}; //các avlNode sẽ phân biệt, xếp thứ tự với nhau dựa vào data->id;
+            avlNode* left{};
+            avlNode* right{};
+
+            avlNode(node* p = nullptr): data(p), left(nullptr), right(nullptr)
+            {}
+        };
+
+        
+        
+    };
+
 };
 
 
