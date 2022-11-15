@@ -1,6 +1,6 @@
 #ifndef __CONCAT_STRING_TREE_H__
 #define __CONCAT_STRING_TREE_H__
-#define MAX 10000000
+#define MAX 10000000UL
 
 #include "main.h"
 
@@ -13,10 +13,11 @@ class ConcatStringTree {
     int numOfnodes{};
 
 public:
+    ConcatStringTree(const char * s);
+    ConcatStringTree(ConcatStringTree const &other); //copy constructor
+private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0)
     {}
-    ConcatStringTree(const char * s);
-    //ConcatStringTree(ConcatStringTree& other); //copy constructor
 
     int length() const;
     char get(int index);
@@ -56,7 +57,7 @@ private:
         node *left{};
         node *right{};
 
-        //Constructors
+        //Constructors and Destructor
     public:
         node(string str=""): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
         {
@@ -67,9 +68,9 @@ private:
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
         node (node* &other);
+        ~node();
 
         //Methods
-        
         int getLength(node*) const; //return the total length
         void setLength(node* root); //cho cả cây
         void setLength()
@@ -82,13 +83,14 @@ private:
         //
         void assignLeft(node* p);
         void assignRight(node* p);
-        node* const& getLeft() {return this->left} ;
-        node* const& getRight() {return this->right};
+        node* const& getLeft() {return this->left;} ;
+        node* const& getRight() {return this->right;};
     };
 
     class ParentsTree
     {
     public:
+        //Forward Declare
         class parentsNode;
         enum BalanceValue
         {
@@ -96,6 +98,7 @@ private:
             E = 0,
             R = 1
         };
+
 
         //varibalers
         parentsNode *root{};
@@ -113,6 +116,7 @@ private:
         
         void insert(ConcatStringTree::node* const node);
         void remove(ConcatStringTree::node* const node);
+        bool isEmpty() const;
 
     private:
         static void rotateLeft(parentsNode* &node);
@@ -126,6 +130,7 @@ private:
         static void removeRec(parentsNode*& node , ConcatStringTree::node* const &p, bool &shorter, bool &success);
 
         static int getHeight(parentsNode*); //tính theo node
+
 
         class parentsNode
         {

@@ -4,11 +4,18 @@ long ConcatStringTree::node::maxID{0}; //because there is no before
 
 ConcatStringTree::ConcatStringTree(const char* c)
 {
-    root =  new node{};
+    root =  new node();
     root->data = c;
     root->length = root->data.length();
     size = root->length; //phân biệt độ dài của root và độ dài của chuỗi
     numOfnodes = 1;
+	this->root->parents->insert(this->root); //chỉ những node là root của một cây mới chứa chính nó như là dấu hiệu nhận biết.
+}
+ConcatStringTree::ConcatStringTree(ConcatStringTree const &other): 
+	size(other.size), numOfnodes(other.numOfnodes)
+{
+	this->root = other.root;
+	//other.root->parents->insert(this->root);
 }
 
 
@@ -217,6 +224,9 @@ ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* root) //trả v
     return newnode;
 }
 
+
+
+
 //---------------------------------------------------------------------------------------------------------------000000000000//
 // Bài 2
 
@@ -285,7 +295,7 @@ int ConcatStringTree::ParentsTree::getHeight (parentsNode* root) //tính theo no
 //hiện thực 2 phương thức cơ bản cho PartentsNode là Insert và Remove
 void ConcatStringTree::ParentsTree:: insert(node* const node)
 {   
-    bool taller = true;
+    bool taller = false; //chỉ khi insert thành công thì mới true
     insertRec(this->root, node, taller);
 }
 void ConcatStringTree::ParentsTree:: remove(node* const node)
@@ -473,6 +483,11 @@ void ConcatStringTree::ParentsTree::insertRec(parentsNode *&node,ConcatStringTre
 	            }
 	        }
 	    }
+		else if (node->data->id == p->id)
+		{
+			taller = false;
+			return;
+		}
 	}	
 }
 
@@ -559,4 +574,23 @@ void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatString
 	}
 }
 
+
+//xét trường hợp khi hủy cây
+bool ConcatStringTree::ParentsTree:: isEmpty() const
+{
+	if (root) return false;
+	else return true;
+}
+ConcatStringTree::node:: ~node()
+{
+	if (this->parents->isEmpty())
+	{
+
+	}
+}
+
+
+Việc cần làm: xử lý thao tác thêm id của chính nó vào trong chính nó khi tạo concatstringtree mà không gây ra memory leak.
+nếu làm theo thầy mỗi parents thêm chính nó mà chỉ hủy khi parents rỗng thì gây ra leak, như vậy thì chỉ thêm ref gốc vào chính gốc
+xử lý destructor của concatstringtree khi return của hàm reverse, substr, concat.
 
