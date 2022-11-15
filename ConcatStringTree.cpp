@@ -52,13 +52,13 @@ char ConcatStringTree::recursiveGet(int index, ConcatStringTree::node* node)
 {
     if (index <= node->leftLength - 1)
     {
-        return recursiveGet(index, node->left);
+        return recursiveGet(index, node->getLeft());
     }
     else if (index >= node->leftLength && index <= node->leftLength + node->length -1)
     {
         return node->data[index - node->leftLength];
     }
-    else return recursiveGet(index - node->leftLength - node->length, node->right);
+    else return recursiveGet(index - node->leftLength - node->length, node->getRight());
 }
 
 
@@ -75,13 +75,13 @@ void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &fo
     {   
         if (!node) return;
 
-        recursiveFind(c, node->left, currIndex - node->leftLength, found);
+        recursiveFind(c, node->getLeft(), currIndex - node->leftLength, found);
         auto i = node->data.find(c);
         if (i != string::npos) //found
         {
             found = (int)i + currIndex;
         }
-        recursiveFind(c, node->right, currIndex + node->rightLength, found);
+        recursiveFind(c, node->getRight(), currIndex + node->rightLength, found);
     }
 }
 
@@ -95,8 +95,8 @@ string ConcatStringTree::recursivetoStringPre(node* root) const
     if (!root) return "";
 
     string s1 = root->data;
-    string s2 = recursivetoStringPre(root->left);
-    string s3 = recursivetoStringPre(root->right);
+    string s2 = recursivetoStringPre(root->getLeft());
+    string s3 = recursivetoStringPre(root->getRight());
     return s1 + s2 + s3;
 }
 
@@ -109,8 +109,8 @@ string ConcatStringTree::recursivetoString(node* root) const
 {
     if (!root) return "";
     string s1 = root->data;
-    string s2 = recursivetoString(root->left);
-    string s3 = recursivetoString(root->right);
+    string s2 = recursivetoString(root->getLeft());
+    string s3 = recursivetoString(root->getRight());
     return s2 + s1 + s3;
 }
 
@@ -118,8 +118,8 @@ string ConcatStringTree::recursivetoString(node* root) const
 ConcatStringTree& ConcatStringTree::concat(const ConcatStringTree & otherS) const //có tránh được copy constructor?
 {
     ConcatStringTree *newstr = new ConcatStringTree("");
-    newstr->root->left = this->root;
-    newstr->root->right = otherS.root;
+    newstr->root->assignLeft (this->root);
+    newstr->root->assignRight (otherS.root);
 
     newstr->root->leftLength = this->root->getLength(this->root);
     newstr->root->rightLength = otherS.root->getLength(otherS.root);
@@ -152,7 +152,7 @@ ConcatStringTree ConcatStringTree::subString(int from, int to) const
     return *newtree;
 
 }
-ConcatStringTree::node* ConcatStringTree:: recursiveSubstr(const node* root, int from, int to) //trả về gốc mới của 1 cây mới từ đó, to ở đây là vị trí chính xác không phải vị trí sau
+ConcatStringTree::node* ConcatStringTree:: recursiveSubstr( node* const root, int from, int to) //trả về gốc mới của 1 cây mới từ đó, to ở đây là vị trí chính xác không phải vị trí sau
 {
     if (!root) return nullptr;
 
@@ -167,29 +167,29 @@ ConcatStringTree::node* ConcatStringTree:: recursiveSubstr(const node* root, int
     }
     else if (from < leftside && to < leftside) //cùng nằm trái
     {
-        return recursiveSubstr(root->left, from, to);
+        return recursiveSubstr(root->getLeft(), from, to);
     }
     else if(from > rightside && to > rightside ) //cùng nằm phải
     {   
-        return recursiveSubstr(root->right, from - rightside - 1, to -rightside - 1 );
+        return recursiveSubstr(root->getRight(), from - rightside - 1, to -rightside - 1 );
     }
     else if (from < leftside && to > rightside)
     {
         node *newnode = new node(root->data);
-        newnode->left = recursiveSubstr(root->left, from, leftside - 1);
-        newnode->right = recursiveSubstr (root->right, 0, to - (rightside + 1) );
+        newnode->assignLeft(recursiveSubstr(root->getLeft(), from, leftside - 1));
+        newnode->assignRight (recursiveSubstr (root->getRight(), 0, to - (rightside + 1) ));
         return newnode;
     }
     else if (from < leftside && to >= leftside && to <= rightside ) //xem kẽ nhau
     {
         node *newnode = new node( root->data.substr(0, to + 1) );
-        newnode->left = recursiveSubstr(root->left, from, root->leftLength - 1);
+        newnode->assignLeft (recursiveSubstr(root->getLeft(), from, root->leftLength - 1));
         return newnode;
     }
     else if (from >= leftside && from <= rightside && to > rightside)
     {
         node *newnode = new node( root->data.substr(from) );
-        newnode->right = recursiveSubstr(root->right, 0, to - rightside - 1);
+        newnode->assignRight (recursiveSubstr(root->getRight(), 0, to - rightside - 1));
         return newnode;
     }
     else return nullptr; //cho có
@@ -210,8 +210,8 @@ ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* root) //trả v
 
     node *newnode = new node(root->data);
     newnode->data = string(root->data.rbegin(), root->data.rend());
-    newnode->right =  recursiveReverse(root->left);
-    newnode->left = recursiveReverse(root->right);
+    newnode->assignRight(recursiveReverse(root->getLeft()));
+    newnode->assignLeft (recursiveReverse(root->getRight()));
 
     newnode->setLength();
     return newnode;
