@@ -228,22 +228,31 @@ void ConcatStringTree::node::assignLeft(node* p)
         if (!p) return;
 
         this->left = p;
-        .... thay đổi AVL của p -> viết thêm 2 hàm insert và remove cho AVL
+		p->parents->insert(this);
     }
     else
     {
-        ...thay đổi ParentsTree của this->left trước rồi gán qua p, rồi thay đổi AVL của p 
+        //thay đổi ParentsTree của this->left trước rồi gán qua p, rồi thay đổi AVL của p 
+		this->left->parents->remove(this);
+		this->left = p;
+		p->parents->insert(this);
     }
 }
 void ConcatStringTree::node::assignRight(node* p) //tương tự assignleft
 {
     if (this->right == nullptr)
     {
+		if (!p) return;
 
+		this->right = p;
+		p->parents->insert(this);		
     }
     else
     {
-
+		//thay đổi ParentsTree của this->left trước rồi gán qua p, rồi thay đổi AVL của p 
+		this->right->parents->remove(this);
+		this->right = p;
+		p->parents->insert(this);
     }
 }
 

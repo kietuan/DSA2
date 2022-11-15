@@ -43,18 +43,18 @@ private:
     {
         //friend class ConcatStringTree;
     public: //có thể truy cập bằng enclosed nhưng không thể truy cập được ở bên ngoài
+        //Variables
         std::string data{};
         int length{};
         int leftLength{};
         int rightLength{}; 
-
         node *left{};
         node *right{};
-
         ConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
         long id{};
         static long maxID;
 
+        //Constructors
         node(string str=""): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
         {
             length = str.length();
@@ -65,6 +65,7 @@ private:
         }
         node (node* &other);
 
+        //Methods
         int getLength(node*) const; //return the total length
         void setLength(node* root); //cho cả cây
         void setLength()
