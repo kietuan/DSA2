@@ -217,6 +217,9 @@ ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* root) //trả v
     return newnode;
 }
 
+//---------------------------------------------------------------------------------------------------------------000000000000//
+// Bài 2
+
 
 void ConcatStringTree::node::assignLeft(node* p)
 {
@@ -268,106 +271,283 @@ int ConcatStringTree::ParentsTree::getHeight (parentsNode* root) //tính theo no
     return 1 + ((a>b) ? a : b);
 }
 
-void ConcatStringTree::ParentsTree::leftRotate (parentsNode* &node)
-{
-    auto temp = node->right;
-    node->right = temp->left;
-    temp->left = node;
-    node = temp;
 
-    //phải thay đổi chiều balance factor?
 
+//hiện thực 2 phương thức cơ bản cho PartentsNode là Insert và Remove
+void ConcatStringTree::ParentsTree:: insert(node* const node)
+{   
+    bool taller = true;
+    insertRec(this->root, node, taller);
 }
-void ConcatStringTree::ParentsTree::rightRotate (parentsNode* &node)
+void ConcatStringTree::ParentsTree:: remove(node* const node)
 {
-    auto temp = node->left;
+    bool success = false, shorter = false;
+    removeRec(this->root, node, shorter, success);
+}
+
+void ConcatStringTree::ParentsTree::rotateRight(parentsNode *&node) //xoay phải
+{
+    parentsNode* temp = node->left;
     node->left = temp->right;
     temp->right = node;
     node = temp;
 }
+void ConcatStringTree::ParentsTree::rotateLeft(parentsNode *&node)
+{
+    parentsNode* temp = node->right;
+    node->right = temp->left;
+    temp->left = node;
+    node = temp;
+}
+void ConcatStringTree::ParentsTree::rightBalance(parentsNode *&node, bool &taller)
+{
+	if(taller)
+	{
+	    if (node->right->balance == R)
+	    {
+	        rotateLeft(node); //không cần gán nữa vì đã reference
+	        node->balance = E;
+	        node->left->balance = E;
+	    }
+	    else if (node->right->balance == L)
+	    {
+	        //chỉnh sửa sau khi đã rotate
+	        if (node->right->left->balance == R)
+	        {
+	            node->right->left->balance = E;
+	            node->balance = L;
+	            node->right->balance = E;
+	        }
+	        else if(node->right->left->balance == E) {
+	            node->balance = E;
+	            node->right->balance = E; 
+	        }
+	        else if (node->right->left->balance == L)
+	        {
+	            node->right->left->balance = E;
+	            node->balance =E;
+	            node->right->balance =R;
+	        }
+	        rotateRight(node->right);
+	    }
+	    taller = false;
+	}
+}
+void ConcatStringTree::ParentsTree::leftBalance(parentsNode *&node, bool &taller)
+{
+	if(taller)
+	{
+	    if (node->left->balance == L)
+	    {
+	        rotateRight(node); //không cần gán nữa vì đã reference
+	        node->balance = E;
+	        node->right->balance = E;
+	        taller = false;
+	    }
+	    else if (node->left->balance == R)
+	    {
+	        //chỉnh sửa sau khi đã rotate
+	        if (node->left->right->balance == L)
+	        {
+	            node->left->right->balance = E;
+	            node->balance = R;
+	            node->left->balance = E;
+	        }
+	        else if(node->left->right->balance == E) 
+	        {
+	            node->balance = E;
+	            node->left->balance = E; 
+	        }
+	        else if (node->left->right->balance == R)
+	        {
+	            node->left->right->balance = E;
+	            node->balance =E;
+	            node->left->balance =L;
+	        }
+	        rotateLeft(node->left);
+	        rotateRight(node);
+	    } 
+	    taller = false;
+	}
+}
+void ConcatStringTree::ParentsTree::removeRightBalance(parentsNode *&node, bool &shorter)
+{               //khi chưa điều chỉnh, cả toàn bộ cây này chiều cao vẫn không thay đổi,vì thứ thay đổi là bị ngắn đi,đã được đánh giá là gnawsn hơn
+	if (shorter) //đều giả định là subtree bên trái bị nhỏ hơn thì mới vào hàm  này và 
+	            //node->balance=R, bên trái bị ngắn hơn rồi mà còn bị xóa, cùn g lắm giaảm đi 1
+    {
+        if (node->right->balance == E)
+        {
+            node->balance = R;
+            node->right->balance = L;
+            rotateLeft(node);
+            shorter = false;
+        }
+        else //right of right and left of right, simillar
+        {   
+            bool tempVar = true;
+            rightBalance(node, tempVar);
+            shorter = true; //vì sau khi điều chỉnh, TỔNG chiều cao của cây này tính  từ root bị giảm đi 1
+        }
+    }
+}
+void ConcatStringTree::ParentsTree::removeLeftBalance(parentsNode *&node, bool &shorter)
+{
+	if (shorter) 
+    {
+        if (node->left->balance == E)
+        {
+            node->balance = L;
+            node->left->balance = R;
+            rotateRight(node);
+            shorter = false;
+        }
+        else
+        {   
+            bool tempVar = true;
+            leftBalance(node, tempVar);
+            shorter = true; //vì sau khi điều chỉnh, TỔNG chiều cao của cây này tính  từ root bị giảm đi 1
+        }
+    }
+}
+void ConcatStringTree::ParentsTree::insertRec(parentsNode *&node,ConcatStringTree::node* const& p, bool &taller)
+{
+	//ta sẽ thêm một node mang giá trị value vào cây con có nốt gốc là node, taller để chỉ rằng cây con có cao lên không
+	if (!node)
+	{
+	    node = new parentsNode(p);
+	    taller = true;
+	}
+	else
+	{
+	    if (p->id < node->data->id) //to left
+	    {
+	        insertRec(node->left, p, taller);
+	        
+	        //những dòng dưới đây sẽ được thực hiện sau khi return xong,  tức là đã thực hiện insert
+	        //taller == true nếu node->left sau khi insert cao hơn.
+	        if (taller == true)
+	        {
+	            if (node->balance == L) //đã cao hơn bên trái rồi mà sau khi insert bên trái lại cao hơn nữa
+	            {
+	                 leftBalance(node, taller);
+	            }
+	            else if (node->balance == E)
+	            {
+	                node->balance = L;
+	                taller = true; //vẫn không có gì thay đổi, nhưng chiều cao vẫn tăng thêm, phải nhận định  vậy  để dòng sau thực hiện tăng
+	            }
+	            else if (node->balance == R)
+	            {
+	                node->balance = E;
+	                taller = false; //cân bằng lại, chiều cao vẫn là max nên không có gì thay đổi, node sau không cần phải xwr lý
+	            }
+	        }
+	    }
+	    else if (node->data->id < p->id) //to right
+	    {
+	        insertRec(node->right, p, taller);
+	        if (taller == true)
+	        {
+	            if (node->balance == R)
+	            {
+	                rightBalance(node, taller);
+	            }
+	            else if (node->balance == E)
+	            {
+	                node->balance = R;
+	                taller = true; //vẫn không có gì thay đổi, nhưng chiều cao vẫn tăng thêm, phải nhận định  vậy  để dòng sau thực hiện tăng
+	            }   //vì taller là một biến return lại cho những hàm đệ quy sau
+	            else if (node->balance == L)
+	            {
+	                node->balance = E;
+	                taller = false; //cân bằng lại, chiều cao vẫn là max nên không có gì thay đổi, node sau không cần phải xwr lý
+	            }
+	        }
+	    }
+	}	
+}
+
+void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatStringTree::node* const &p, bool &shorter, bool &success)
+{
+    //success: found, đã tìm thấy và xóa, đây như là 1 kỹ thuật để sau nhậtn biết được là đã  xóa
+	//đi tìm như bst tree, và tìm thấy thì xóa, vì chỉ có duy nhất 1 giá trị được tìm
+	if (!node)
+	{
+	    success = false;
+	    shorter= false;
+	}
+	
+	else if (node->data->id == p->id) //base
+	{
+	    if (!node->left && !node->right)
+	    {
+	        delete node;
+	        node = nullptr;
+	        success = true;
+	        shorter = true;
+	    }
+	    else if (!node->left && node->right)
+	    {
+	        parentsNode* temp = node->right;
+	        delete node;
+	        node = temp;
+	        success = true;
+	        shorter = true; //cây con này mất hẳn đi 1 đơn vị
+	    }
+	    else if (node->left && !node->right)
+	    {
+	        parentsNode* temp = node->left;
+	        delete node;
+	        node = temp;
+	        success = true;
+	        shorter = true;
+	    }
+	    else if (node->left && node->right)
+	    {
+	        parentsNode* temp = node->left;
+	        while (temp->right) temp = temp->right;
+	        //lúc này temp->right đã bằng null
+	        
+	        node->data = temp->data;
+	        removeRec(node->left, temp->data, shorter, success);
+	        //here, shorter = true and success = true.....
+	    }
+	}
+	else if (node->data->id > p->id)
+	{
+	    removeRec(node->left, p, shorter, success);
+	    if (success) //đã tìm được và xóa thì mới vào hàm
+	    {
+	        if (shorter) //cái ở bên trái đã bị nhỏ hơn sau khi xóa
+	        {
+	            if (node->balance == R)
+	            {
+	                removeRightBalance(node, shorter);
+	            }
+	            else if (node->balance == L) {node->balance = E; shorter = true;}
+	            else if (node->balance == E){ node->balance = R; shorter = false;}
+	        }
+	        else if (!shorter); //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
+	    }
+	    
+	}
+	else if (p->id > node->data->id)
+	{
+	    removeRec(node->right, p, shorter, success);
+	    if (success) //đã tìm được và xóa thì mới vào hàm
+	    {
+	        if (shorter) //cái ở bên phải đã bị nhỏ hơn sau khi xóa
+	        {
+	            if (node->balance == L)
+	            {
+	                removeLeftBalance(node, shorter);
+	            }
+	            else if (node->balance == R) {node->balance = E; shorter = true;}
+	            else if (node->balance == E){ node->balance = L; shorter = false;}
+	        }
+	        else if (!shorter); //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
+	    }
+	}
+}
 
 
-
-void ConcatStringTree::ParentsTree::insert(const ConcatStringTree::node* node)
-{
-    recursiveInsert(this->root, node, false);
-}
-void ConcatStringTree::ParentsTree::recursiveInsert(parentsNode* &root, const ConcatStringTree::node* nodee, bool& done)
-{
-    if (root == nullptr)
-    {
-        root = new parentsNode(nodee);
-    }
-    else
-    {
-        if (nodee->id > root->data->id)
-        {
-            //to left
-            recursiveInsert(root->left, nodee, done);
-            if (!done)
-            {
-                updateFactor(root);
-                if (root->balanceFactor >= 2) 
-                {
-                balanceTree (root);
-                done = true;
-                }
-            }
-            
-        }
-        else if (nodee->id < root->data->id)
-        {
-            //to right
-            recursiveInsert(root->left, nodee, done);
-            if (!done)
-            {
-                updateFactor(root);
-                if (root->balanceFactor <= -2)
-                {
-                balanceTree (root);
-                done = true;
-                }
-            }
-        }
-    }
-}
-void ConcatStringTree::ParentsTree::updateFactor( parentsNode*& root)
-{
-    root->balanceFactor = getHeight(root->right) - getHeight(root->left);
-}
-void ConcatStringTree::ParentsTree::balanceTree(parentsNode*& root)
-{
-    if (root->balanceFactor >= 2) //right
-    {
-        if (root->right->balanceFactor == 1) //right of right
-            {
-                leftRotate(root);
-                root->balanceFactor = 0;
-                root -> left -> balanceFactor = 0;
-            }
-        else if (root->right->balanceFactor == -1) //left of right
-        {
-            rightRotate(root->right);
-            leftRotate(root);
-            root->balanceFactor= root->right->balanceFactor = 0;
-            root->left->balanceFactor = -1;
-        }
-    }
-    else if (root->balanceFactor <= -2) // left
-    {
-        if (root->left->balanceFactor == -1) //left of left
-            {
-                rightRotate(root);
-                root->balanceFactor = 0;
-                root -> right -> balanceFactor = 0;
-            }
-        else if (root->left->balanceFactor == 1) //right of left
-        {
-            leftRotate(root->left);
-            rightRotate(root);
-            root->balanceFactor= root->left->balanceFactor = 0;
-            root->right->balanceFactor = -1;
-        }
-        
-    }
-}

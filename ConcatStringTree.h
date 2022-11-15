@@ -83,36 +83,52 @@ private:
     {
     public:
         class parentsNode;
+        enum BalanceValue
+        {
+            L = -1,
+            E = 0,
+            R = 1
+        };
 
+        //varibalers
         parentsNode *root{};
         int size{};
 
+        //constructor
         ParentsTree(): size(0), root(nullptr)
         {}
-        //void insert(const node* node); //khi có node mới được trỏ vào node đang chứa ParentsTree hiện tại
-        //void recursiveInsert(const node* node, parentsNode* root);
+
+        //Method
+    public:
         int getSize() const;
         static int getSize(parentsNode*);
         int getHeight() const;
-        static int getHeight(parentsNode*); //tính theo node
-        static void leftRotate(parentsNode* &node); //we ensure that this is valid case
-        static void rightRotate(parentsNode* &node);
-        void insert(const ConcatStringTree::node* node);
-        void recursiveInsert(parentsNode*& root , const ConcatStringTree::node* node, bool& done);
-        static void balanceTree(parentsNode*& node);
-        static void updateFactor( parentsNode*& node);
-        void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa ParentsTree hiện tại nữa
+        
+        void insert(ConcatStringTree::node* const node);
+        void remove(ConcatStringTree::node* const node);
 
+    private:
+        static void rotateLeft(parentsNode* &node);
+        static void rotateRight(parentsNode* &node);
+        static void leftBalance(parentsNode*& node, bool &taller);
+        static void rightBalance(parentsNode*& node, bool &taller);
+        static void removeLeftBalance(parentsNode*& node, bool &shorter);
+        static void removeRightBalance(parentsNode*& node, bool &shorter);
+
+        static void insertRec(parentsNode*& node , ConcatStringTree::node* const & p, bool& taller);
+        static void removeRec(parentsNode*& node , ConcatStringTree::node* const &p, bool &shorter, bool &success);
+
+        static int getHeight(parentsNode*); //tính theo node
 
         class parentsNode
         {
         public:
             ConcatStringTree::node* data{}; //các parentsNode sẽ phân biệt, xếp thứ tự với nhau dựa vào data->id;
-            int balanceFactor{}; //right - left
+            BalanceValue balance{E}; 
             parentsNode* left{};
             parentsNode* right{};
 
-            parentsNode(node* p = nullptr): data(p), left(nullptr), right(nullptr), balanceFactor{0}
+            parentsNode(ConcatStringTree::node* p = nullptr): data(p), left(nullptr), right(nullptr), balance(E)
             {}
         };
     };
