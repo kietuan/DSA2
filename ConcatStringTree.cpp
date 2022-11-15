@@ -244,21 +244,21 @@ void ConcatStringTree::node::assignRight(node* p) //tương tự assignleft
     }
 }
 
-int ConcatStringTree::avlTree::getHeight() const
+int ConcatStringTree::ParentsTree::getHeight() const
 {
     return getHeight(this->root);
 }
-int ConcatStringTree::avlTree::getSize() const
+int ConcatStringTree::ParentsTree::getSize() const
 {
     return getSize(this->root);
 }
-int ConcatStringTree::avlTree::getSize (avlNode* root)
+int ConcatStringTree::ParentsTree::getSize (parentsNode* root)
 {
     if (!root) return 0;
     return 1 + getSize(root->left) + getSize(root->right);
 }
 
-int ConcatStringTree::avlTree::getHeight (avlNode* root) //tính theo node
+int ConcatStringTree::ParentsTree::getHeight (parentsNode* root) //tính theo node
 {
     if (!root) return 0;
     if (!root->left && !root->right) return 1;
@@ -268,7 +268,7 @@ int ConcatStringTree::avlTree::getHeight (avlNode* root) //tính theo node
     return 1 + ((a>b) ? a : b);
 }
 
-void ConcatStringTree::avlTree::leftRotate (avlNode* &node)
+void ConcatStringTree::ParentsTree::leftRotate (parentsNode* &node)
 {
     auto temp = node->right;
     node->right = temp->left;
@@ -278,7 +278,7 @@ void ConcatStringTree::avlTree::leftRotate (avlNode* &node)
     //phải thay đổi chiều balance factor?
 
 }
-void ConcatStringTree::avlTree::rightRotate (avlNode* &node)
+void ConcatStringTree::ParentsTree::rightRotate (parentsNode* &node)
 {
     auto temp = node->left;
     node->left = temp->right;
@@ -288,15 +288,15 @@ void ConcatStringTree::avlTree::rightRotate (avlNode* &node)
 
 
 
-void ConcatStringTree::avlTree::insert(const ConcatStringTree::node* node)
+void ConcatStringTree::ParentsTree::insert(const ConcatStringTree::node* node)
 {
     recursiveInsert(this->root, node, false);
 }
-void ConcatStringTree::avlTree::recursiveInsert(avlNode* &root, const ConcatStringTree::node* nodee, bool& done)
+void ConcatStringTree::ParentsTree::recursiveInsert(parentsNode* &root, const ConcatStringTree::node* nodee, bool& done)
 {
     if (root == nullptr)
     {
-        root = new avlNode(nodee);
+        root = new parentsNode(nodee);
     }
     else
     {
@@ -331,11 +331,11 @@ void ConcatStringTree::avlTree::recursiveInsert(avlNode* &root, const ConcatStri
         }
     }
 }
-void ConcatStringTree::avlTree::updateFactor( avlNode*& root)
+void ConcatStringTree::ParentsTree::updateFactor( parentsNode*& root)
 {
     root->balanceFactor = getHeight(root->right) - getHeight(root->left);
 }
-void ConcatStringTree::avlTree::balanceTree(avlNode*& root)
+void ConcatStringTree::ParentsTree::balanceTree(parentsNode*& root)
 {
     if (root->balanceFactor >= 2) //right
     {

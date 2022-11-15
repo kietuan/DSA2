@@ -6,7 +6,7 @@
 
 class ConcatStringTree {
     class node; //forward declare
-    class avlTree;
+    class ParentsTree;
 
     node *root{};
     int size{};
@@ -51,7 +51,7 @@ private:
         node *left{};
         node *right{};
 
-        ConcatStringTree::avlTree* ParentsTree{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
+        ConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
         long id{};
         static long maxID;
 
@@ -61,7 +61,7 @@ private:
             
             if (maxID < MAX) id = ++maxID;
             else throw overflow_error("Id is overflow!");
-            ParentsTree = new avlTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
+            parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
         node (node* &other);
 
@@ -73,46 +73,46 @@ private:
         }
 
         //bởi vì trong mỗi node sẽ chứa 1 cái ParentsTrees chỉ đến các node mà là node cha của nó, tức là chỉ thẳng đến nó, nên ta
-        //sẽ không gán con trỏ left, right một cách tường minh nữa, ta sẽ tạo một function gán left right cho nó và làm hết mọi việc thay đổi cái AVLtreee
+        //sẽ không gán con trỏ left, right một cách tường minh nữa, ta sẽ tạo một function gán left right cho nó và làm hết mọi việc thay đổi cái ParentsTreee
         //
         void assignLeft(node* p);
         void assignRight(node* p);
     };
 
-    class avlTree
+    class ParentsTree
     {
     public:
-        class avlNode;
+        class parentsNode;
 
-        avlNode *root{};
+        parentsNode *root{};
         int size{};
 
-        avlTree(): size(0), root(nullptr)
+        ParentsTree(): size(0), root(nullptr)
         {}
-        //void insert(const node* node); //khi có node mới được trỏ vào node đang chứa avlTree hiện tại
-        //void recursiveInsert(const node* node, avlNode* root);
+        //void insert(const node* node); //khi có node mới được trỏ vào node đang chứa ParentsTree hiện tại
+        //void recursiveInsert(const node* node, parentsNode* root);
         int getSize() const;
-        static int getSize(avlNode*);
+        static int getSize(parentsNode*);
         int getHeight() const;
-        static int getHeight(avlNode*); //tính theo node
-        static void leftRotate(avlNode* &node); //we ensure that this is valid case
-        static void rightRotate(avlNode* &node);
+        static int getHeight(parentsNode*); //tính theo node
+        static void leftRotate(parentsNode* &node); //we ensure that this is valid case
+        static void rightRotate(parentsNode* &node);
         void insert(const ConcatStringTree::node* node);
-        void recursiveInsert(avlNode*& root , const ConcatStringTree::node* node, bool& done);
-        static void balanceTree(avlNode*& node);
-        static void updateFactor( avlNode*& node);
-        void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa avlTree hiện tại nữa
+        void recursiveInsert(parentsNode*& root , const ConcatStringTree::node* node, bool& done);
+        static void balanceTree(parentsNode*& node);
+        static void updateFactor( parentsNode*& node);
+        void remove(const node* node); //khi có node mới không trỏ vào NODE đang chứa ParentsTree hiện tại nữa
 
 
-        class avlNode
+        class parentsNode
         {
         public:
-            ConcatStringTree::node* data{}; //các avlNode sẽ phân biệt, xếp thứ tự với nhau dựa vào data->id;
+            ConcatStringTree::node* data{}; //các parentsNode sẽ phân biệt, xếp thứ tự với nhau dựa vào data->id;
             int balanceFactor{}; //right - left
-            avlNode* left{};
-            avlNode* right{};
+            parentsNode* left{};
+            parentsNode* right{};
 
-            avlNode(node* p = nullptr): data(p), left(nullptr), right(nullptr), balanceFactor{0}
+            parentsNode(node* p = nullptr): data(p), left(nullptr), right(nullptr), balanceFactor{0}
             {}
         };
     };
