@@ -14,18 +14,29 @@ ConcatStringTree::ConcatStringTree(const char* c)
 	this->root->parents->insert(this->root); //chỉ những node là root của một cây mới chứa chính nó như là dấu hiệu nhận biết.
 }
 ConcatStringTree::ConcatStringTree(ConcatStringTree const &other): 
-										size(other.size), numOfnodes(other.numOfnodes)
+	size(other.size), numOfnodes(other.numOfnodes)
 {
-	this->root = new node(other.root->data); // tạo ra 1 phiên bản
+	this->root = new node(*(other.root)); // tạo ra 1 phiên bản
 											 //quy ước: không có 2 concat nào chung root, mỗi root tự chứa chính nó như là 1 dấu hiệu của concat
-	
 	this->root->parents->insert(this->root);
 	this->root->assignLeft(other.root->getLeft());
 	this->root->assignRight(other.root->getRight());
+	this->root->rightLength = other.root->rightLength;
+	this->root->leftLength = other.root->leftLength;
 }
-ConcatStringTree:: ~ConcatStringTree()
+ConcatStringTree::~ConcatStringTree()
 {
 	this->root->removeParent(this->root);
+}
+ConcatStringTree::node:: node(node const &other) ://copy constructor of node, used in copy of concatstringstree
+	data(other.data), length(other.length), leftLength(0), rightLength(0), left(nullptr), right(nullptr)
+{	
+	if (maxID < MAX) id = ++maxID;
+    else throw overflow_error("Id is overflow!");
+
+    parents = new ParentsTree();
+	//this->assignLeft(other.left); chỉ tạo node chứ không tạo cây
+	//this->assignRight(other.right); chỉ tạo node chứ không tạo cây
 }
 
 

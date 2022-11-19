@@ -68,7 +68,7 @@ private:
 
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
-        node (node* &other);
+        node(node const &other);
         ~node();
 
         //Methods
