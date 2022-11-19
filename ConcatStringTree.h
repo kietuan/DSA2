@@ -15,6 +15,7 @@ class ConcatStringTree {
 public:
     ConcatStringTree(const char * s);
     ConcatStringTree(ConcatStringTree const &other); //copy constructor
+    ~ConcatStringTree();
 private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0)
     {}
@@ -65,12 +66,14 @@ private:
             
             if (maxID < MAX) id = ++maxID;
             else throw overflow_error("Id is overflow!");
+
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
         node (node* &other);
         ~node();
 
         //Methods
+    public:
         int getLength(node*) const; //return the total length
         void setLength(node* root); //cho cả cây
         void setLength()
@@ -85,6 +88,7 @@ private:
         void assignRight(node* p);
         node* const& getLeft() {return this->left;} ;
         node* const& getRight() {return this->right;};
+        void removeParent(node*);
     };
 
     class ParentsTree
