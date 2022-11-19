@@ -17,8 +17,7 @@ public:
     ConcatStringTree(ConcatStringTree const &other); //copy constructor
     ~ConcatStringTree();
 private:
-    ConcatStringTree(): root(nullptr), size(0), numOfnodes(0)
-    {}
+    ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {}
 
     int length() const;
     char get(int index);

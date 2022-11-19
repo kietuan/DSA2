@@ -166,9 +166,12 @@ ConcatStringTree ConcatStringTree::subString(int from, int to) const
     ConcatStringTree *newtree = new ConcatStringTree();
     this->root->setLength(); //cho chắc chắn là tính toán đúng độ dài trái phải
     newtree-> root = recursiveSubstr(this->root, from, to - 1);
+	if(newtree->root)
+		newtree->root->parents->insert(newtree->root);
     newtree->setSize();
-    return *newtree;
-
+	ConcatStringTree newtree2 (*newtree);
+	delete newtree;
+    return newtree2;
 }
 ConcatStringTree::node* ConcatStringTree:: recursiveSubstr( node* const root, int from, int to) //trả về gốc mới của 1 cây mới từ đó, to ở đây là vị trí chính xác không phải vị trí sau
 {
@@ -220,7 +223,11 @@ ConcatStringTree ConcatStringTree::reverse() const
     //lúc này root vẫn là nullptr
     newtree->root = recursiveReverse(this->root);
     newtree->setSize();
-    return *newtree;
+	if(newtree->root)
+		newtree->root->parents->insert(newtree->root);
+	ConcatStringTree newtree2 (*newtree); //nhằm ngăn chặn memory leak không trung cập được newtree
+	delete newtree;
+    return newtree2;
 }
 ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* root) //trả về gốc mới của 1 cây mới từ đó
 {
@@ -315,11 +322,6 @@ void ConcatStringTree::ParentsTree:: remove(node* const node)
 {
     bool success = false, shorter = false;
     removeRec(this->root, node, shorter, success);
-	
-	if (success) //giả sử hàm trả về đúng sucess
-	{
-		if (!this->root)
-	}
 }
 
 
@@ -616,7 +618,7 @@ ConcatStringTree::node:: ~node()
 //help function cho việc hủy cây, ~Concatstringtree
 void ConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node cha của this
 {
-	this->parents->remove(p); //có thể không thành công, 
+	this->parents->remove(p); //có thể không thành công nếu p không tồn tại trong cây
 	if (this->parents->isEmpty())
 	{
 		//bắt đầu xóa p ra khỏi, lần lượt lần đến 2 cây con 
