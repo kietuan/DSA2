@@ -68,13 +68,13 @@ private:
 
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
-        node(node const &other);
+        node(node const &other) = delete;
         ~node();
 
         //Methods
     public:
-        int getLength(node*) const; //return the total length
-        void setLength(node* root); //cho cả cây
+        static int getLength(node*) ; //return the total length
+        static void setLength(node* root); //cho cả cây
         void setLength()
         {
             setLength(this);
