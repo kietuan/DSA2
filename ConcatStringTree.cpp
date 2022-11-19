@@ -133,17 +133,17 @@ string ConcatStringTree::recursivetoString(node* root) const
 }
 
 
-ConcatStringTree& ConcatStringTree::concat(const ConcatStringTree & otherS) const //có tránh được copy constructor?
+ConcatStringTree ConcatStringTree::concat(const ConcatStringTree & otherS) const //có tránh được copy constructor?
 {
-    ConcatStringTree *newstr = new ConcatStringTree("");
-    newstr->root->assignLeft (this->root);
-    newstr->root->assignRight (otherS.root);
+    ConcatStringTree newstr("");
+    newstr.root->assignLeft (this->root);
+    newstr.root->assignRight (otherS.root);
 
-    newstr->root->leftLength = this->root->getLength(this->root);
-    newstr->root->rightLength = otherS.root->getLength(otherS.root);
-    newstr->setSize();
+    newstr.root->leftLength = this->root->getLength(this->root);
+    newstr.root->rightLength = otherS.root->getLength(otherS.root);
+    newstr.setSize();
 
-    return *newstr;
+    return newstr;
 }
 
 /*

@@ -24,7 +24,7 @@ private:
     int indexOf(char c) ;
     string toStringPreOrder() const;
     string toString() const;
-    ConcatStringTree& concat(const ConcatStringTree & otherS) const;
+    ConcatStringTree concat(const ConcatStringTree & otherS) const;
     ConcatStringTree subString(int from, int to) const;
     ConcatStringTree reverse() const;
     int getParTreeSize(const string & query) const;
