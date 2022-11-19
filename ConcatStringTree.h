@@ -93,6 +93,7 @@ private:
 
     class ParentsTree
     {
+        friend class node;
     public:
         //Forward Declare
         class parentsNode;
@@ -119,10 +120,10 @@ private:
         int getHeight() const;
         
         void insert(ConcatStringTree::node* const node);
-        void remove(ConcatStringTree::node* const node);
         bool isEmpty() const;
 
     private:
+        void remove(ConcatStringTree::node* const node);
         static void rotateLeft(parentsNode* &node);
         static void rotateRight(parentsNode* &node);
         static void leftBalance(parentsNode*& node, bool &taller);

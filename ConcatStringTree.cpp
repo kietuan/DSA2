@@ -25,12 +25,7 @@ ConcatStringTree::ConcatStringTree(ConcatStringTree const &other):
 }
 ConcatStringTree:: ~ConcatStringTree()
 {
-	this->root->parents->remove(this->root);
-	if (this->root->parents->isEmpty())
-	{
-		//bắt đầu tiến hành xóa root này,
-
-	}
+	this->root->removeParent(this->root);
 }
 
 
@@ -259,7 +254,8 @@ void ConcatStringTree::node::assignLeft(node* p)
     else
     {
         //thay đổi ParentsTree của this->left trước rồi gán qua p, rồi thay đổi AVL của p 
-		this->left->parents->remove(this);
+		//this->left->parents->remove(this);
+		this->left->removeParent(this);
 		this->left = p;
 		p->parents->insert(this);
     }
@@ -276,7 +272,8 @@ void ConcatStringTree::node::assignRight(node* p) //tương tự assignleft
     else
     {
 		//thay đổi ParentsTree của this->left trước rồi gán qua p, rồi thay đổi AVL của p 
-		this->right->parents->remove(this);
+		//this->right->parents->remove(this);
+		this->right->removeParent(this);
 		this->right = p;
 		p->parents->insert(this);
     }
@@ -617,12 +614,15 @@ ConcatStringTree::node:: ~node()
 }
 
 //help function cho việc hủy cây, ~Concatstringtree
-void ConcatStringTree::node:: removeParent(node* p)
+void ConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node cha của this
 {
-	this->parents->remove(p); //có thể không thành công;
+	this->parents->remove(p); //có thể không thành công, 
 	if (this->parents->isEmpty())
 	{
 		//bắt đầu xóa p ra khỏi, lần lượt lần đến 2 cây con 
+		this->left->removeParent(this);
+		this->right->removeParent(this);
+		delete this;
 	}
 }
 
