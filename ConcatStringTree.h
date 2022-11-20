@@ -111,10 +111,10 @@ private:
 
         //varibalers
         parentsNode *root{};
-        int size{};
+        //int size;
 
         //constructor
-        ParentsTree(): size(0), root(nullptr)
+        ParentsTree(): root(nullptr)
         {}
 
         //Method
@@ -141,7 +141,7 @@ private:
 
         static int getHeight(parentsNode*); //tính theo node
 
-
+    public:
         class parentsNode
         {
         public:

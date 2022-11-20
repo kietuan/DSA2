@@ -48,6 +48,15 @@
         "optional": "cpp",
         "ratio": "cpp",
         "regex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "bitset": "cpp",
+        "charconv": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "fstream": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "syncstream": "cpp",
+        "valarray": "cpp"
     }
 }
