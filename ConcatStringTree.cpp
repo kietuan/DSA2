@@ -158,17 +158,17 @@ ConcatStringTree ConcatStringTree::subString(int from, int to) const
     if (from >= to) throw logic_error("Invalid range!");
 
     //lúc này chắc chắn from và to đã hợp lệ
-    ConcatStringTree *newtree = new ConcatStringTree();
-    this->root->setLength(); //cho chắc chắn là tính toán đúng độ dài trái phải
-    newtree-> root = recursiveSubstr(this->root, from, to - 1);
-	if(newtree->root)
-		newtree->root->parents->insert(newtree->root);
-    newtree->setSize();
-	ConcatStringTree newtree2 (*newtree);
-	delete newtree;
-    return newtree2;
+	this->root->setLength(); //cho chắc chắn là tính toán đúng độ dài trái phải
+
+    ConcatStringTree newtree;
+    newtree.root = recursiveSubstr(this->root, from, to - 1);
+
+	if(newtree.root)
+		newtree.root->parents->insert(newtree.root);
+    newtree.setSize();
+    return newtree;
 }
-ConcatStringTree::node* ConcatStringTree:: recursiveSubstr( node* const root, int from, int to) //trả về gốc mới của 1 cây mới từ đó, to ở đây là vị trí chính xác không phải vị trí sau
+ConcatStringTree::node* ConcatStringTree:: recursiveSubstr( node* const &root, int from, int to) //trả về  địa chỉ của gốc mới của 1 cây mới từ đó, to ở đây là vị trí chính xác không phải vị trí sau
 {
     if (!root) return nullptr;
 
@@ -214,17 +214,16 @@ ConcatStringTree::node* ConcatStringTree:: recursiveSubstr( node* const root, in
 
 ConcatStringTree ConcatStringTree::reverse() const
 {
-    ConcatStringTree *newtree = new ConcatStringTree();
+    ConcatStringTree newtree; //= new ConcatStringTree();
     //lúc này root vẫn là nullptr
-    newtree->root = recursiveReverse(this->root);
-    newtree->setSize();
-	if(newtree->root)
-		newtree->root->parents->insert(newtree->root);
-	ConcatStringTree newtree2 (*newtree); //nhằm ngăn chặn memory leak không trung cập được newtree
-	delete newtree;
-    return newtree2;
+    newtree.root = recursiveReverse(this->root);
+
+    newtree.setSize();
+	if(newtree.root)
+		newtree.root->parents->insert(newtree.root);
+    return newtree;
 }
-ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* root) //trả về gốc mới của 1 cây mới từ đó
+ConcatStringTree::node* ConcatStringTree::recursiveReverse(node* const &root) //trả về gốc mới của 1 cây mới từ đó
 {
     if (!root) return nullptr;
 

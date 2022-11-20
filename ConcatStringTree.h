@@ -37,8 +37,8 @@ private:
     void recursiveFind (char c, node* node, int currIndex, int& found);
     string recursivetoStringPre(node* root) const;
     string recursivetoString(node* root) const;
-    static node* recursiveReverse(node* root) ; //trả về 1 node mới và 1 cây mới từ đó
-    static node* recursiveSubstr(node* const root, int from, int to);
+    static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
+    static node* recursiveSubstr(node* const &root, int from, int to);
     ConcatStringTree& operator= (ConcatStringTree const &other) = delete;
     ConcatStringTree& operator= (ConcatStringTree &&); //move assignment
 
@@ -72,8 +72,9 @@ private:
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
         node(node const &other) = delete;
-        ~node();
         node& operator= (node &other) = delete;
+        //node& operator= (node &&other);
+        ~node();
 
         //Methods
     public:
