@@ -13,19 +13,23 @@ ConcatStringTree::ConcatStringTree(const char* c)
     numOfnodes = 1;
 	this->root->parents->insert(this->root); //chỉ những node là root của một cây mới chứa chính nó như là dấu hiệu nhận biết.
 }
-ConcatStringTree::ConcatStringTree(ConcatStringTree const &other): 
-	size(other.size), numOfnodes(other.numOfnodes)
+ConcatStringTree::ConcatStringTree(ConcatStringTree &&other):
+	root(other.root), size(other.size), numOfnodes(other.numOfnodes)
 {
-	this->root = new node(other.root->data); // tạo ra 1 phiên bản
-											 //quy ước: không có 2 concat nào chung root, mỗi root tự chứa chính nó như là 1 dấu hiệu của concat
-	
-	this->root->parents->insert(this->root);
-	this->root->assignLeft(other.root->getLeft());
-	this->root->assignRight(other.root->getRight());
+	other.root = nullptr;
 }
 ConcatStringTree:: ~ConcatStringTree()
 {
 	this->root->removeParent(this->root);
+}
+ConcatStringTree& ConcatStringTree::operator= (ConcatStringTree  &&other)
+{
+	if (this == &other) return *this;
+	
+	delete this->root;
+	this->root = other.root;
+	other.root = nullptr;
+	return *this;
 }
 
 
@@ -146,16 +150,7 @@ ConcatStringTree ConcatStringTree::concat(const ConcatStringTree & otherS) const
     return newstr;
 }
 
-/*
-ConcatStringTree::ConcatStringTree(ConcatStringTree& other): size{other.size}, numOfnodes{other.numOfnodes}
-{
-    root = new node(this->root); //đưa lại cho hàm dưới
-}
-ConcatStringTree::node:: node(node*& other)
-{
-    
-}
-*/
+
 
 ConcatStringTree ConcatStringTree::subString(int from, int to) const
 {
@@ -292,7 +287,7 @@ int ConcatStringTree::ParentsTree::getHeight() const
 {
     return getHeight(this->root);
 }
-int ConcatStringTree::ParentsTree::getSize() const
+int ConcatStringTree::ParentsTree::size() const
 {
     return getSize(this->root);
 }
@@ -630,3 +625,9 @@ void ConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node
 	}
 }
 
+
+//một số phương thức đề bài yêu cầu
+string ConcatStringTree::ParentsTree::toStringPreOrder() const
+{
+
+}

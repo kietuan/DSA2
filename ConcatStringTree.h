@@ -14,7 +14,8 @@ class ConcatStringTree {
 
 public:
     ConcatStringTree(const char * s);
-    ConcatStringTree(ConcatStringTree const &other); //copy constructor
+    ConcatStringTree(ConcatStringTree const &other) = delete; //copy constructor
+    ConcatStringTree(ConcatStringTree &&other);
     ~ConcatStringTree();
 private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {}
@@ -38,6 +39,8 @@ private:
     string recursivetoString(node* root) const;
     static node* recursiveReverse(node* root) ; //trả về 1 node mới và 1 cây mới từ đó
     static node* recursiveSubstr(node* const root, int from, int to);
+    ConcatStringTree& operator= (ConcatStringTree const &other) = delete;
+    ConcatStringTree& operator= (ConcatStringTree &&); //move assignment
 
 private:
     class node
@@ -70,6 +73,7 @@ private:
         }
         node(node const &other) = delete;
         ~node();
+        node& operator= (node &other) = delete;
 
         //Methods
     public:
@@ -114,9 +118,10 @@ private:
 
         //Method
     public:
-        int getSize() const;
+        int size() const;
         static int getSize(parentsNode*);
         int getHeight() const;
+        string toStringPreOrder() const;
         
         void insert(ConcatStringTree::node* const node);
         bool isEmpty() const;
