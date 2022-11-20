@@ -62,7 +62,7 @@ private:
 
         //Constructors and Destructor
     public:
-        node(string str=""): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
+        node(string str): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
         {
             length = str.length();
             
@@ -71,6 +71,7 @@ private:
 
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
+        node() = delete;
         node(node const &other) = delete;
         node& operator= (node &other) = delete;
         //node& operator= (node &&other);
@@ -120,10 +121,8 @@ private:
         //Method
     public:
         int size() const;
-        static int getSize(parentsNode*);
         int getHeight() const;
         string toStringPreOrder() const;
-        
         void insert(ConcatStringTree::node* const node);
         bool isEmpty() const;
 
@@ -138,8 +137,9 @@ private:
 
         static void insertRec(parentsNode*& node , ConcatStringTree::node* const & p, bool& taller);
         static void removeRec(parentsNode*& node , ConcatStringTree::node* const &p, bool &shorter, bool &success);
-
+        static string nodelistPre(const parentsNode* const &node );
         static int getHeight(parentsNode*); //tính theo node
+        static int getSize(parentsNode*);
 
     public:
         class parentsNode
