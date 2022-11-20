@@ -670,3 +670,8 @@ string ConcatStringTree::getParTreeStringPreOrder(const string & query) const
 	}
 	return temp->parents->toStringPreOrder();
 }
+
+
+
+
+//--------------------------------------------------------Bài 3------------------------------------------------------------------

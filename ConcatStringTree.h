@@ -159,8 +159,9 @@ private:
 
 
 
-
 class ReducedConcatStringTree; // forward declaration
+class LitStringHash; // forward declaration
+
 
 class HashConfig {
 private:
@@ -171,20 +172,53 @@ private:
     int initSize;
 
     friend class ReducedConcatStringTree;
+    friend class LitStringHash;
 };
 
-class ReducedConcatStringTree /* */ 
-{
-public:
-    class LitStringHash {
-    public:
-        LitStringHash(const HashConfig & hashConfig);
-        int getLastInsertedIndex() const;
-        string toString() const;
-    };
+class LitStringHash {
+public: //deffault, sửa sau
+    class LitString; //một loại string nhưng được nâng cấp hơn, là thành phần của cây
+    enum STATUS_TYPE {NIL, NON_EMPTY, DELETED};
 
+    //Variables
+    LitString *data{}; //bảng chứa các litstring
+    STATUS_TYPE *status{};
+    int size{};        // kích cỡ của bảng
+
+
+    //Methods
 public:
-    static LitStringHash litStringHash;
+    LitStringHash(const HashConfig & hashConfig);
+    int getLastInsertedIndex() const;
+    string toString() const;
+
+
+    class LitString
+    {
+        std::string str{};
+
+    };
+};
+
+class ReducedConcatStringTree /* */ {
+    class Node;
+public:
+
+    //variables
+    LitStringHash* const litStringHash{}; // nắm giữ của bảng has mà nó đang dùng, các node của nó sẽ trỏ tới, mặc định cho const vì không muón thay đổi nhữn giá trị sẽ sử dụng
+    Node* root{};
+    int size{};
+
+    //Constructors
+    ReducedConcatStringTree(const char * s, LitStringHash * litStringHash);
+
+private:
+    class Node
+    {
+        LitStringHash::LitString* data{}; //chỉ nắm giữa 1 tham chiếu
+        Node* left{};
+        Node* right{};
+    };
 };
 
 #endif // __CONCAT_STRING_TREE_H__
