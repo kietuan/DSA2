@@ -3,23 +3,23 @@ FLAG = -pedantic-errors -Werror -g -O0
 
 
 all: 
-	$(CXX) main.cpp ConcatStringTree.cpp ReducedConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o main
-	./main
+	$(CXX) main.cpp ConcatStringTree.cpp ReducedConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o main.o
+	./main.o
 
 concat:
-	$(CXX) main.cpp ConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o main
-	./main
+	$(CXX) testConcat.cpp ConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o testConcat.o
+	./testConcat.o
 
 reduced:
-	$(CXX) main.cpp ReducedConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o main
-	./main
+	$(CXX) testReduced.cpp ReducedConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o testReduced.o
+	./testReduced.o
 
 run: main
 	./main
 
 test: test.cpp
-	$(CXX) $(FLAG)  -std=c++11 test.cpp -o test 
-	./test
+	$(CXX) $(FLAG)  -std=c++11 test.cpp -o test.o
+	./test.o
 
 clean:
-	rm main
+	rm *.o

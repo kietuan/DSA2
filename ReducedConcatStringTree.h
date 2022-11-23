@@ -1,3 +1,6 @@
+#ifndef __REDUCED_CONCAT_STRING_TREE_H__
+#define __REDUCED_CONCAT_STRING_TREE_H__
+
 #define MAX 10000000UL
 
 #include "main.h"
@@ -234,3 +237,4 @@ private:
 };
 
 
+#endif
