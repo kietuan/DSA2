@@ -647,12 +647,13 @@ bool ReducedConcatStringTree::ParentsTree:: isEmpty() const
 
 void ReducedConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node cha của this
 {
+	if(!this) return;
 	this->parents->remove(p); //có thể không thành công nếu p không tồn tại trong cây
 	if (this->parents->isEmpty())
 	{
 		//bắt đầu xóa p ra khỏi, lần lượt lần đến 2 cây con 
-		this->left->removeParent(this);
-		this->right->removeParent(this);
+		if (this->left) this->left->removeParent(this);
+		if(this->right) this->right->removeParent(this);
 		delete this;
 	}
 }

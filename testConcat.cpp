@@ -3,10 +3,8 @@
 int main()
 {
 
-    auto s1 = new ConcatStringTree ("hello");
-    auto s2 =  new ConcatStringTree("world");
-    ConcatStringTree s3 = s1->concat(*s2);
-    delete s1;
-    delete s2;
+    ConcatStringTree s1("hello");
+    ConcatStringTree s2("world");
+    ConcatStringTree s3 = s1.concat(s2);
     return 0;
 }
