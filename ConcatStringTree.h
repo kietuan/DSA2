@@ -49,10 +49,10 @@ private:
     public: //có thể truy cập bằng enclosed nhưng không thể truy cập được ở bên ngoài
 
         //Variables
-        std::string data{};
-        int length{};
-        int leftLength{};
-        int rightLength{}; 
+        std::string const data{};
+        int               length{};
+        int               leftLength{};
+        int               rightLength{}; 
         ConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
         long id{};
         static long maxID;
@@ -62,17 +62,16 @@ private:
 
         //Constructors and Destructor
     public:
-        node(string str): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
+        node(string str): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}, length{str.length()}
         {
-            length = str.length();
-            
             if (maxID < MAX) id = ++maxID;
             else throw overflow_error("Id is overflow!");
 
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
-        node() = delete;
-        node(node const &other) = delete;
+
+        node()                        = delete;
+        node(node const &other)       = delete;
         node& operator= (node &other) = delete;
         //node& operator= (node &&other);
         ~node();

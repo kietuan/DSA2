@@ -35,18 +35,20 @@ ConcatStringTree& ConcatStringTree::operator= (ConcatStringTree  &&other)
 
 int ConcatStringTree::length() const
 {
-    return size; //cần tạo 1 hàm cho size
+    //return size; //cần tạo 1 hàm cho size
+	return node::getLength(this->root);
 }
 void ConcatStringTree::setSize()
 {
-    if (root) this->size += this->root->length + this->root->leftLength + this->root->rightLength; //đưa công việc tạo size lại cho class node
+    if (root) 
+		this->size = this->root->length + this->root->leftLength + this->root->rightLength; //đưa công việc tạo size lại cho class node
     else this->size = 0;
 }
 int ConcatStringTree::node::getLength(node* node) 
 {
     if (!node) return 0;
     
-    node->length = node->data.length();
+    //node->length = node->data.length();
     return node->length + getLength(node->left) + getLength(node->right);
 }
 void ConcatStringTree::node::setLength(node* root) //đặt cho cả cây từ gốc, preorder
@@ -61,7 +63,7 @@ void ConcatStringTree::node::setLength(node* root) //đặt cho cả cây từ g
 }
 
 
-char ConcatStringTree::get(int index)
+char ConcatStringTree::get(int index) chưa cập nhật hàm size liên tục
 {
     if (index < 0 || index > size) throw out_of_range("Index of string is invalid!");
     else 
@@ -107,7 +109,7 @@ void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &fo
 }
 
 
-string ConcatStringTree::toStringPreOrder() const
+string ConcatStringTree::toStringPreOrder() const chưa làm đúng yêu cầu đề bài
 {
     return recursivetoStringPre(this->root);
 }
