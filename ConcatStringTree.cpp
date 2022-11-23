@@ -112,24 +112,33 @@ void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &fo
 }
 
 
-string ConcatStringTree::toStringPreOrder() const chưa làm đúng yêu cầu đề bài
-{
-    return recursivetoStringPre(this->root);
+string ConcatStringTree::toStringPreOrder() const
+{	
+	string res = "ConcatStringTree[";
+	string s = recursivetoStringPre(this->root);
+	if (s != "" ) s.pop_back(); //bỏ đi dấu ; sau cùng
+    return res + s +"]";
 }
 string ConcatStringTree::recursivetoStringPre(node* root) const
 {
     if (!root) return "";
 
     string s1 = root->data;
+	//(LL=0,L=5,"Hello");
+	if (s1 != "") 
+		s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",\"" + s1 + "\");" ;
+	else s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",<NULL>);";
+
     string s2 = recursivetoStringPre(root->getLeft());
     string s3 = recursivetoStringPre(root->getRight());
     return s1 + s2 + s3;
 }
 
 
-string ConcatStringTree::toString() const chưa làm đúng yêu cầu đề bài
+string ConcatStringTree::toString() const 
 {
-    return recursivetoString(this->root);
+	string res = "ConcatStringTree[\"";
+    return res + recursivetoString(this->root) + "\"]";
 }
 string ConcatStringTree::recursivetoString(node* root) const
 {

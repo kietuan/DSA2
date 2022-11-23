@@ -49,7 +49,7 @@ private:
     public: //có thể truy cập bằng enclosed nhưng không thể truy cập được ở bên ngoài
 
         //Variables
-        std::string const data{};
+        std::string       data{};
         int               length{};
         int               leftLength{};
         int               rightLength{}; 
@@ -62,7 +62,7 @@ private:
 
         //Constructors and Destructor
     public:
-        node(string str): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}, length{str.length()}
+        node(string str): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}, length{(int)str.length()}
         {
             if (maxID < MAX) id = ++maxID;
             else throw overflow_error("Id is overflow!");
@@ -74,7 +74,7 @@ private:
         node(node const &other)       = delete;
         node& operator= (node &other) = delete;
         //node& operator= (node &&other);
-        ~node();
+        //~node();
 
         //Methods
     public:
