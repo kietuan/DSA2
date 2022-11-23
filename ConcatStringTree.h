@@ -18,7 +18,7 @@ public:
     ConcatStringTree(ConcatStringTree &&other);
     ~ConcatStringTree();
 private:
-    ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {}
+    ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {} //Cẩn thận với default vì khó kiểm soát, không được dùng tự tiện
 
     int length() const;
     char get(int index) const;
