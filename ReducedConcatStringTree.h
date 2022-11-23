@@ -5,6 +5,24 @@ class ReducedConcatStringTree; // forward declaration
 class LitStringHash; // forward declaration
 class LitString;
 
+class LitString // một loại string mới dùng cho hash lưu trữ
+{
+    friend class ReducedConcatStringTree;
+    friend class LitStringHash;
+    
+private:
+    std::string str{};
+    int numofLink{}; //chỉ có duy nhất ở đây bất thường, chỉ chính là số node đang trỏ tới nó
+
+public:
+    int length() const {return str.length();}
+
+    bool operator==(LitString const &other);
+
+    LitString(std::string s=""): str(s), numofLink(0) 
+    {}
+};
+
 
 class ReducedConcatStringTree /* */ {
     friend class LitString;
@@ -52,60 +70,6 @@ private:
     ReducedConcatStringTree& operator= (ReducedConcatStringTree const &other) = delete;
 };
 
-
-class ReducedConcatStringTree::node
-{
-public:
-    LitString* const data{}; //chỉ nắm giữa 1 tham chiếu, đến đối tượng nằm trong bảng băm
-    LitStringHash* const hashTable{}; //mỗi node sẽ phải nắm giữ bảng hash mà nó đang dùng dữ liệu
-    int  length{};
-    int leftLength{};
-    int rightLength{}; 
-    ReducedConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
-    long id{};
-    static long maxID;
-private:
-    node *left{};
-    node *right{};
-
-public:
-    node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
-        data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{p->str.length()}
-    {
-        data->numofLink += 1;
-        
-
-        if (maxID < MAX) id = ++maxID;
-        else throw overflow_error("Id is overflow!");
-
-        parents = new ParentsTree();
-    }
-    ~node(); //khi xóa node phải tháo ra 
-
-    node()                         = delete;
-    node(node const &other)        = delete;
-    node& operator= (node &other)  = delete;
-        //node& operator= (node &&other);
-    
-
-        //Methods
-public:
-    static int getLength(node*) ; //return the total length
-    static void setLength(node* root); //cho cả cây
-    void setLength()
-    {
-        setLength(this);
-    }
-
-        //bởi vì trong mỗi node sẽ chứa 1 cái ParentsTrees chỉ đến các node mà là node cha của nó, tức là chỉ thẳng đến nó, nên ta
-        //sẽ không gán con trỏ left, right một cách tường minh nữa, ta sẽ tạo một function gán left right cho nó và làm hết mọi việc thay đổi cái ParentsTreee
-        //
-    void    assignLeft      (node* p);
-    void    assignRight     (node* p);
-    node*   const& getLeft() {return this->left;} ;
-    node*   const& getRight () {return this->right;};
-    void    removeParent    (node*);
-};
 
 class ReducedConcatStringTree::ParentsTree
 {
@@ -167,6 +131,63 @@ private:
 };
 
 
+
+class ReducedConcatStringTree::node
+{
+public:
+    LitString* const data{}; //chỉ nắm giữa 1 tham chiếu, đến đối tượng nằm trong bảng băm
+    LitStringHash* const hashTable{}; //mỗi node sẽ phải nắm giữ bảng hash mà nó đang dùng dữ liệu
+    int  length{};
+    int leftLength{};
+    int rightLength{}; 
+    ReducedConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
+    long id{};
+    static long maxID;
+private:
+    node *left{};
+    node *right{};
+
+public:
+    node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
+        data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{(int)p->str.length()}
+    {
+        data->numofLink += 1;
+        
+
+        if (maxID < MAX) id = ++maxID;
+        else throw overflow_error("Id is overflow!");
+
+        parents = new ParentsTree();
+    }
+    ~node(); //khi xóa node phải tháo ra 
+
+    node()                         = delete;
+    node(node const &other)        = delete;
+    node& operator= (node &other)  = delete;
+        //node& operator= (node &&other);
+    
+
+        //Methods
+public:
+    static int getLength(node*) ; //return the total length
+    static void setLength(node* root); //cho cả cây
+    void setLength()
+    {
+        setLength(this);
+    }
+
+        //bởi vì trong mỗi node sẽ chứa 1 cái ParentsTrees chỉ đến các node mà là node cha của nó, tức là chỉ thẳng đến nó, nên ta
+        //sẽ không gán con trỏ left, right một cách tường minh nữa, ta sẽ tạo một function gán left right cho nó và làm hết mọi việc thay đổi cái ParentsTreee
+        //
+    void    assignLeft      (node* p);
+    void    assignRight     (node* p);
+    node*   const& getLeft() {return this->left;} ;
+    node*   const& getRight () {return this->right;};
+    void    removeParent    (node*);
+};
+
+
+
 class HashConfig {
 private:
     int p;
@@ -212,21 +233,4 @@ private:
     void rehash();
 };
 
-class LitString // một loại string mới dùng cho hash lưu trữ
-{
-private:
-    friend class ReducedConcatStringTree;
-    friend class ReducedConcatStringTree::node;
-    friend class LitStringHash;
 
-    std::string str{};
-    int numofLink{}; //chỉ có duy nhất ở đây bất thường, chỉ chính là số node đang trỏ tới nó
-
-public:
-    int length() const {return str.length();}
-private:
-    bool operator==(LitString const &other);
-
-    LitString(std::string s=""): str(s), numofLink(0) 
-    {}
-};

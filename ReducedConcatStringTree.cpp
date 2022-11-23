@@ -107,12 +107,12 @@ void LitStringHash::dellocateMem()
 }
 void LitStringHash::rehash()
 {
-	auto temp = new LitString[size * config.alpha]{};
+	auto temp = new LitString[ int(size * config.alpha)]{};
 	for (int i = 0; i <size; i++) temp[i] = data[i];
 	delete[] data;
 	data = temp;
 
-	auto tempst = new STATUS_TYPE [size * config.alpha]{};
+	auto tempst = new STATUS_TYPE [ int(size * config.alpha)]{};
 	for (int i = 0; i <size; i++) tempst[i]= status[i];
 	for (int i = size; i < size * config.alpha; i++) tempst[i] = NIL;
 	delete[] status;
