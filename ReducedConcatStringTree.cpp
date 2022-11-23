@@ -132,7 +132,7 @@ ReducedConcatStringTree::ReducedConcatStringTree(const char * s, LitStringHash *
 {
 	int index = litStringHash->insert(s);
 	//litStringHash->data[index] chứa phần tử mà ta mới thêm vô
-	root = new node(&(litStringHash->data[index]));
+	root = new node(&(litStringHash->data[index]), litStringHash);
 }
 
 ReducedConcatStringTree::ReducedConcatStringTree(ReducedConcatStringTree &&other):
@@ -165,8 +165,11 @@ int ReducedConcatStringTree::length() const
 }
 void ReducedConcatStringTree::setSize()
 {
-    if (root) 
-		this->size = this->root->length + this->root->leftLength + this->root->rightLength; //đưa công việc tạo size lại cho class node
+    if (root)
+		{
+			node::setLength(this->root);
+			this->size = root->length + root->rightLength + root->leftLength;
+		}
     else this->size = 0;
 }
 
@@ -189,7 +192,7 @@ void ReducedConcatStringTree::node::setLength(node* root) //đặt cho cả cây
 }
 
 
-char ReducedConcatStringTree::get(int index) chưa cập nhật hàm size liên tục
+char ReducedConcatStringTree::get(int index) const
 {
     if (index < 0 || index > size) throw out_of_range("Index of string is invalid!");
     else
@@ -197,7 +200,7 @@ char ReducedConcatStringTree::get(int index) chưa cập nhật hàm size liên 
         return recursiveGet(index, this->root);
     }
 }
-char ReducedConcatStringTree::recursiveGet(int index, ReducedConcatStringTree::node* node)
+char ReducedConcatStringTree::recursiveGet(int index, ReducedConcatStringTree::node* node) const
 {
     if (index <= node->leftLength - 1)
     {
@@ -212,13 +215,13 @@ char ReducedConcatStringTree::recursiveGet(int index, ReducedConcatStringTree::n
 
 
 
-int ReducedConcatStringTree::indexOf(char c) 
+int ReducedConcatStringTree::indexOf(char c) const
 {
     int found = -1;
     recursiveFind(c, this->root, this->root->leftLength, found);
     return found;
 }
-void ReducedConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &found)
+void ReducedConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &found) const
 {   
     if (found == -1)
     {   
@@ -641,12 +644,12 @@ void ReducedConcatStringTree::node:: removeParent(node* p) //xóa node p ra kh�
 		//bắt đầu xóa p ra khỏi, lần lượt lần đến 2 cây con 
 		this->left->removeParent(this);
 		this->right->removeParent(this);
-		delete this; ở đây gọi destructor của node được
+		delete this;
 	}
 }
 
 ReducedConcatStringTree::node:: ~node()
 {
 	this->data->numofLink -= 1;
-	if (this->data->numofLink == 0) 
+	if (this->data->numofLink == 0) hashTable->remove(data->str);
 }

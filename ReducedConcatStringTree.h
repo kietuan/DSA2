@@ -30,8 +30,8 @@ public:
     //Methods
 public:
     int     length() const;
-    char    get(int index);
-    int     indexOf(char c) ;
+    char    get(int index) const;
+    int     indexOf(char c) const;
     string  toStringPreOrder() const;
     string  toString() const;
     ReducedConcatStringTree concat(const ReducedConcatStringTree & otherS) const;
@@ -41,9 +41,9 @@ public:
     string  getParTreeStringPreOrder(const string & query) const;
 private:
     int recursiveLength(node* ) const;
-    char recursiveGet (int index, ReducedConcatStringTree::node*);
+    char recursiveGet (int index, ReducedConcatStringTree::node*) const;
     void setSize();
-    void recursiveFind (char c, node* node, int currIndex, int& found);
+    void recursiveFind (char c, node* node, int currIndex, int& found) const;
     string recursivetoStringPre(node* root) const;
     string recursivetoString(node* root) const;
     static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
@@ -57,7 +57,8 @@ class ReducedConcatStringTree::node
 {
 public:
     LitString* const data{}; //chỉ nắm giữa 1 tham chiếu, đến đối tượng nằm trong bảng băm
-    int              length{};
+    LitStringHash* const hashTable{}; //mỗi node sẽ phải nắm giữ bảng hash mà nó đang dùng dữ liệu
+    int  length{};
     int leftLength{};
     int rightLength{}; 
     ReducedConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
@@ -68,8 +69,8 @@ private:
     node *right{};
 
 public:
-    node(LitString* p) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
-        data{p}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{p->str.length()}
+    node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
+        data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{p->str.length()}
     {
         data->numofLink += 1;
         

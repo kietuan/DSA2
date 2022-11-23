@@ -21,8 +21,8 @@ public:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {}
 
     int length() const;
-    char get(int index);
-    int indexOf(char c) ;
+    char get(int index) const;
+    int indexOf(char c) const;
     string toStringPreOrder() const;
     string toString() const;
     ConcatStringTree concat(const ConcatStringTree & otherS) const;
@@ -32,9 +32,9 @@ public:
     string getParTreeStringPreOrder(const string & query) const;
 private:
     int recursiveLength(node* ) const;
-    char recursiveGet (int index, ConcatStringTree::node*);
+    char recursiveGet (int index, ConcatStringTree::node*) const;
     void setSize();
-    void recursiveFind (char c, node* node, int currIndex, int& found);
+    void recursiveFind (char c, node* node, int currIndex, int& found) const;
     string recursivetoStringPre(node* root) const;
     string recursivetoString(node* root) const;
     static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó

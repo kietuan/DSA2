@@ -40,8 +40,11 @@ int ConcatStringTree::length() const
 }
 void ConcatStringTree::setSize()
 {
-    if (root) 
-		this->size = this->root->length + this->root->leftLength + this->root->rightLength; //đưa công việc tạo size lại cho class node
+    if (root)
+		{
+			node::setLength(this->root);
+			this->size = root->length + root->rightLength + root->leftLength;
+		}
     else this->size = 0;
 }
 int ConcatStringTree::node::getLength(node* node) 
@@ -63,7 +66,7 @@ void ConcatStringTree::node::setLength(node* root) //đặt cho cả cây từ g
 }
 
 
-char ConcatStringTree::get(int index) chưa cập nhật hàm size liên tục
+char ConcatStringTree::get(int index) const
 {
     if (index < 0 || index > size) throw out_of_range("Index of string is invalid!");
     else 
@@ -71,7 +74,7 @@ char ConcatStringTree::get(int index) chưa cập nhật hàm size liên tục
         return recursiveGet(index, this->root);
     }
 }
-char ConcatStringTree::recursiveGet(int index, ConcatStringTree::node* node)
+char ConcatStringTree::recursiveGet(int index, ConcatStringTree::node* node) const
 {
     if (index <= node->leftLength - 1)
     {
@@ -86,13 +89,13 @@ char ConcatStringTree::recursiveGet(int index, ConcatStringTree::node* node)
 
 
 
-int ConcatStringTree::indexOf(char c) 
+int ConcatStringTree::indexOf(char c) const
 {
     int found = -1;
     recursiveFind(c, this->root, this->root->leftLength, found);
     return found;
 }
-void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &found)
+void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &found) const
 {   
     if (found == -1)
     {   
@@ -124,7 +127,7 @@ string ConcatStringTree::recursivetoStringPre(node* root) const
 }
 
 
-string ConcatStringTree::toString() const
+string ConcatStringTree::toString() const chưa làm đúng yêu cầu đề bài
 {
     return recursivetoString(this->root);
 }
@@ -446,6 +449,7 @@ void ConcatStringTree::ParentsTree::removeLeftBalance(parentsNode *&node, bool &
         }
     }
 }
+
 void ConcatStringTree::ParentsTree::insertRec(parentsNode *&node,ConcatStringTree::node* const& p, bool &taller)
 {
 	//ta sẽ thêm một node mang giá trị value vào cây con có nốt gốc là node, taller để chỉ rằng cây con có cao lên không
@@ -604,6 +608,7 @@ bool ConcatStringTree::ParentsTree:: isEmpty() const
 	if (root) return false;
 	else return true;
 }
+/* cho rằng hàm node không cần destructor vì không nắm giữ con trỏ nào quan trọng
 ConcatStringTree::node:: ~node()
 {
 	if (this->parents->isEmpty())
@@ -611,6 +616,7 @@ ConcatStringTree::node:: ~node()
 
 	}
 }
+*/
 
 //help function cho việc hủy cây, ~Concatstringtree
 void ConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node cha của this
