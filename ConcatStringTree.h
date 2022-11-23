@@ -17,7 +17,7 @@ public:
     ConcatStringTree(ConcatStringTree const &other) = delete; //copy constructor
     ConcatStringTree(ConcatStringTree &&other);
     ~ConcatStringTree();
-public:
+private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {}
 
     int length() const;

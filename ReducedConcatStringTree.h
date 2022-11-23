@@ -47,7 +47,7 @@ public:
    ~ReducedConcatStringTree();
 
     ReducedConcatStringTree(ReducedConcatStringTree const &other) = delete;
-
+    ReducedConcatStringTree() = delete;
     //Methods
 public:
     int     length() const;
