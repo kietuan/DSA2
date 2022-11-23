@@ -17,7 +17,7 @@ public:
     ConcatStringTree(ConcatStringTree const &other) = delete; //copy constructor
     ConcatStringTree(ConcatStringTree &&other);
     ~ConcatStringTree();
-private:
+public:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {}
 
     int length() const;
@@ -39,8 +39,8 @@ private:
     string recursivetoString(node* root) const;
     static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
     static node* recursiveSubstr(node* const &root, int from, int to);
-    ConcatStringTree& operator= (ConcatStringTree const &other) = delete;
     ConcatStringTree& operator= (ConcatStringTree &&); //move assignment
+    ConcatStringTree& operator= (ConcatStringTree const &other) = delete;
 
 private:
     class node
@@ -98,8 +98,8 @@ private:
 
     class ParentsTree
     {
-        friend class node;
-    public:
+        //friend class node;
+    private:
         //Forward Declare
         class parentsNode;
         enum BalanceValue
@@ -115,8 +115,10 @@ private:
         //int size;
 
         //constructor
+    public:
         ParentsTree(): root(nullptr)
         {}
+
 
         //Method
     public:
@@ -125,9 +127,10 @@ private:
         string toStringPreOrder() const;
         void insert(ConcatStringTree::node* const node);
         bool isEmpty() const;
+        void remove(ConcatStringTree::node* const node);
 
     private:
-        void remove(ConcatStringTree::node* const node);
+        
         static void rotateLeft(parentsNode* &node);
         static void rotateRight(parentsNode* &node);
         static void leftBalance(parentsNode*& node, bool &taller);
@@ -141,7 +144,7 @@ private:
         static int getHeight(parentsNode*); //tính theo node
         static int getSize(parentsNode*);
 
-    public:
+    private:
         class parentsNode
         {
         public:
@@ -159,6 +162,8 @@ private:
 
 
 
+
+//----------------------------------------------------------------------Bài 3----------------------------------------------------------------------------------
 class ReducedConcatStringTree; // forward declaration
 class LitStringHash; // forward declaration
 
@@ -176,48 +181,100 @@ private:
 };
 
 class LitStringHash {
-public: //deffault, sửa sau
+    friend class ReducedConcatStringTree
     class LitString; //một loại string nhưng được nâng cấp hơn, là thành phần của cây
-    enum STATUS_TYPE {NIL, NON_EMPTY, DELETED};
+    enum STATUS_TYPE {NIL, FILLED, DELETED};
 
+private:
     //Variables
     LitString *data{}; //bảng chứa các litstring
     STATUS_TYPE *status{};
     int size{};        // kích cỡ của bảng
+    HashConfig const &config{};
 
+    //Constructors
+    LitStringHash(const HashConfig & hashConfig): config{hashConfig}, size{0}, data{nullptr}, status{nullptr} {} //bảng hash vẫn chưa có gì đến khi được thêm vô
+    LitStringHash() = delete;
 
     //Methods
 public:
-    LitStringHash(const HashConfig & hashConfig);
     int getLastInsertedIndex() const;
     string toString() const;
+    
+private:
+    void allocateMem();
+    void dellocateMem();
+    int insert(string const s);
+    int remove (string const s);
+    int search (std::string const s) const;
+    int hashFucntion(string const key) const;
+    int probe(string const key, int i) const;
+    void rehash();
 
-
+private:
     class LitString
     {
+    public:
         std::string str{};
+        int numofLink{}; //chỉ có duy nhất ở đây bất thường, chỉ chính là số Node đang trỏ tới nó
 
+        bool operator==(LitString const &other);
+        LitString(std::string s=""): str(s), numofLink(0)   
+        { }
     };
 };
 
+
+
 class ReducedConcatStringTree /* */ {
     class Node;
-public:
 
     //variables
+private:
     LitStringHash* const litStringHash{}; // nắm giữ của bảng has mà nó đang dùng, các node của nó sẽ trỏ tới, mặc định cho const vì không muón thay đổi nhữn giá trị sẽ sử dụng
     Node* root{};
     int size{};
 
     //Constructors
+public:
     ReducedConcatStringTree(const char * s, LitStringHash * litStringHash);
+
+
+    //Methods
+public:
+    int length() const;
+    char get(int index);
+    int indexOf(char c) ;
+    string toStringPreOrder() const;
+    string toString() const;
+    ReducedConcatStringTree concat(const ConcatStringTree & otherS) const;
+    ReducedConcatStringTree subString(int from, int to) const;
+    ReducedConcatStringTree reverse() const;
+    int getParTreeSize(const string & query) const;
+    string getParTreeStringPreOrder(const string & query) const;
+
 
 private:
     class Node
     {
-        LitStringHash::LitString* data{}; //chỉ nắm giữa 1 tham chiếu
-        Node* left{};
-        Node* right{};
+    public:
+        LitStringHash::LitString* data{}; //chỉ nắm giữa 1 tham chiếu, đến đối tượng nằm trong bảng băm
+        int length{};
+        int leftLength{};
+        int rightLength{}; 
+        ReducedConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
+        long id{};
+        static long maxID;
+    private:
+        Node *left{};
+        Node *right{};
+
+    
+        Node(LitStringHash::LitString* p): data{p}, left{nullptr}, right{nullptr} //Node này trỏ tới p
+        {
+            data->numofLink += 1;
+        }
+        Node() = delete;
     };
 };
 
