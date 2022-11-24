@@ -227,13 +227,15 @@ void ReducedConcatStringTree::recursiveFind (char c, node* node, int currIndex, 
     {   
         if (!node) return;
 
-        recursiveFind(c, node->getLeft(), currIndex - node->leftLength, found);
+       if (node->getLeft()) 
+			recursiveFind(c, node->getLeft(), currIndex - node->getLeft()->rightLength - node->getLeft()->length, found);
         auto i = node->data->str.find(c);
-        if (i != string::npos) //found
+        if (i != string::npos && found == -1) //found
         {
             found = (int)i + currIndex;
         }
-        recursiveFind(c, node->getRight(), currIndex + node->rightLength, found);
+        if(node->getRight()) 
+			recursiveFind(c, node->getRight(), currIndex + node->length + node->getRight()->leftLength, found);
     }
 }
 
