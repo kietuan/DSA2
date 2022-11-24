@@ -41,10 +41,10 @@ int ConcatStringTree::length() const
 void ConcatStringTree::setSize()
 {
     if (root)
-		{
-			node::setLength(this->root);
-			this->size = root->length + root->rightLength + root->leftLength;
-		}
+	{
+		node::setLength(this->root);
+		this->size = root->length + root->rightLength + root->leftLength;
+	}
     else this->size = 0;
 }
 int ConcatStringTree::node::getLength(node* node) 
@@ -183,47 +183,32 @@ ConcatStringTree ConcatStringTree::subString(int from, int to) const
     newtree.setSize();
     return newtree;
 }
+//precodition: from and to in true form and all the internal nodes are null string
 ConcatStringTree::node* ConcatStringTree:: recursiveSubstr( node* const &root, int from, int to) //trả về  địa chỉ của gốc mới của 1 cây mới từ đó, to ở đây là vị trí chính xác không phải vị trí sau
 {
-    if (!root) return nullptr;
+	if (!root) return nullptr;
 
-    //trường hợp đơn giản: from và to nằm trong root gốc
-    const int leftside = root->leftLength;
-    const int rightside = root->leftLength + root->length -1;
-
-    if (from >= leftside && to <= rightside)
-    {
-        node *newnode = new node( root->data.substr(from, to - from + 1) );
-        return newnode;
-    }
-    else if (from < leftside && to < leftside) //cùng nằm trái
-    {
-        return recursiveSubstr(root->getLeft(), from, to);
-    }
-    else if(from > rightside && to > rightside ) //cùng nằm phải
-    {   
-        return recursiveSubstr(root->getRight(), from - rightside - 1, to -rightside - 1 );
-    }
-    else if (from < leftside && to > rightside)
-    {
-        node *newnode = new node(root->data);
-        newnode->assignLeft(recursiveSubstr(root->getLeft(), from, leftside - 1));
-        newnode->assignRight (recursiveSubstr (root->getRight(), 0, to - (rightside + 1) ));
-        return newnode;
-    }
-    else if (from < leftside && to >= leftside && to <= rightside ) //xem kẽ nhau
-    {
-        node *newnode = new node( root->data.substr(0, to + 1) );
-        newnode->assignLeft (recursiveSubstr(root->getLeft(), from, root->leftLength - 1));
-        return newnode;
-    }
-    else if (from >= leftside && from <= rightside && to > rightside)
-    {
-        node *newnode = new node( root->data.substr(from) );
-        newnode->assignRight (recursiveSubstr(root->getRight(), 0, to - rightside - 1));
-        return newnode;
-    }
-    else return nullptr; //cho có
+	if (!root->getLeft() && !root->getRight())
+	{
+		auto newnode = new node( root->data.substr(from, to - from + 1) );
+		return newnode;
+	}
+	else
+	{
+		node *newnode = new node("");
+		if 		(from <= root->leftLength-1 && to <= root->leftLength-1) 
+			newnode->assignLeft (recursiveSubstr(root->getLeft(), from, to));
+		else if (from <= root->leftLength-1 && to >= root->leftLength  )
+		{
+ 			newnode->assignLeft (recursiveSubstr(root->getLeft(), from, root->leftLength - 1));
+			newnode->assignRight (recursiveSubstr(root->getRight(), 0, to - root->leftLength));
+		}
+		else if (from >= root->leftLength 	&& to >= root->leftLength  )
+		{
+			newnode->assignRight( recursiveSubstr(root->getRight(), from - root->leftLength, to - root->leftLength));
+		}
+		return newnode;
+	}
 }
 
 

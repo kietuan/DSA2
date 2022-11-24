@@ -166,10 +166,10 @@ int ReducedConcatStringTree::length() const
 void ReducedConcatStringTree::setSize()
 {
     if (root)
-		{
-			node::setLength(this->root);
-			this->size = root->length + root->rightLength + root->leftLength;
-		}
+	{
+		node::setLength(this->root);
+		this->size = root->length + root->rightLength + root->leftLength;
+	}
     else this->size = 0;
 }
 

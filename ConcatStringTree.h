@@ -5,7 +5,7 @@
 #include "main.h"
 
 class ConcatStringTree;
-void test_indexof(const ConcatStringTree* const );
+void test(const ConcatStringTree* const );
 
 class ConcatStringTree {
     friend void test_indexof(const ConcatStringTree* const );
