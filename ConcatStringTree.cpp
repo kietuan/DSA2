@@ -654,13 +654,13 @@ int ConcatStringTree::getParTreeSize(const string & query) const
 	node *temp = root;
 	for(int i = 0; i < query.length(); i++)
 	{	 
-		if (!temp) throw runtime_error("Invalid query: reaching NULL");
-		if (query[i] == 'l') temp = temp->getLeft();
-		else if (query[i] == 'r') temp = temp->getRight();
-		else throw runtime_error("Invalid character of query");
+		if (query[i] != 'l' && query[i] != 'r') throw runtime_error("Invalid character of query");
+		if (!temp) 								throw runtime_error("Invalid query: reaching NULL");
 
-		if (!temp) throw runtime_error("Invalid query: reaching NULL");
+		if 		(query[i] == 'l') temp = temp->getLeft();
+		else if (query[i] == 'r') temp = temp->getRight();
 	}
+
 	return temp->parents->size();
 }
 string ConcatStringTree::getParTreeStringPreOrder(const string & query) const
