@@ -101,13 +101,15 @@ void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &fo
     {   
         if (!node) return;
 
-        if (node->getLeft()) recursiveFind(c, node->getLeft(), currIndex - node->getLeft()->rightLength, found);
+        if (node->getLeft()) 
+			recursiveFind(c, node->getLeft(), currIndex - node->getLeft()->rightLength - node->getLeft()->length, found);
         auto i = node->data.find(c);
         if (i != string::npos && found == -1) //found
         {
             found = (int)i + currIndex;
         }
-        if(node->getRight()) recursiveFind(c, node->getRight(), currIndex + node->length + node->getRight()->leftLength, found);
+        if(node->getRight()) 
+			recursiveFind(c, node->getRight(), currIndex + node->length + node->getRight()->leftLength, found);
     }
 }
 

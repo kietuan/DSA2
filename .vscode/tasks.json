@@ -9,7 +9,9 @@
 				"-fdiagnostics-color=always",
 				"-pedantic-errors", "-Werror",
 				"-g",
+				"ReducedConcatStringTree.cpp", "ConcatStringTree.cpp",
 				"${file}",
+				"-I",".",
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}"
 				//"main"

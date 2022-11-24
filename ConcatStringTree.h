@@ -4,7 +4,12 @@
 
 #include "main.h"
 
+class ConcatStringTree;
+void test_indexof(const ConcatStringTree* const );
+
 class ConcatStringTree {
+    friend void test_indexof(const ConcatStringTree* const );
+
     class node; //forward declare
     class ParentsTree;
 
@@ -21,6 +26,7 @@ private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {} //Cẩn thận với default vì khó kiểm soát, không được dùng tự tiện
 
 public:
+    void test_indexof()                                         const;
     int length()                                                const;
     char get(int index)                                         const;
     int indexOf(char c)                                         const;
