@@ -20,6 +20,7 @@ public:
 private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {} //Cẩn thận với default vì khó kiểm soát, không được dùng tự tiện
 
+public:
     int length() const;
     char get(int index) const;
     int indexOf(char c) const;
@@ -74,7 +75,10 @@ private:
         node(node const &other)       = delete;
         node& operator= (node &other) = delete;
         //node& operator= (node &&other);
-        //~node();
+        ~node()
+        {
+            std::cout << id << " is destroyed" << endl;
+        }
 
         //Methods
     public:
