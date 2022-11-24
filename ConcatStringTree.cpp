@@ -68,7 +68,7 @@ void ConcatStringTree::node::setLength(node* root) //đặt cho cả cây từ g
 
 char ConcatStringTree::get(int index) const
 {
-    if (index < 0 || index > size) throw out_of_range("Index of string is invalid!");
+    if (index < 0 || index >= size) throw out_of_range("Index of string is invalid!");
     else 
     {
         return recursiveGet(index, this->root);
@@ -101,13 +101,13 @@ void ConcatStringTree::recursiveFind (char c, node* node, int currIndex, int &fo
     {   
         if (!node) return;
 
-        recursiveFind(c, node->getLeft(), currIndex - node->leftLength, found);
+        if (node->getLeft()) recursiveFind(c, node->getLeft(), currIndex - node->getLeft()->rightLength, found);
         auto i = node->data.find(c);
-        if (i != string::npos) //found
+        if (i != string::npos && found == -1) //found
         {
             found = (int)i + currIndex;
         }
-        recursiveFind(c, node->getRight(), currIndex + node->rightLength, found);
+        if(node->getRight()) recursiveFind(c, node->getRight(), currIndex + node->length + node->getRight()->leftLength, found);
     }
 }
 
