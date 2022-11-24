@@ -14,34 +14,36 @@ class ConcatStringTree {
 
 public:
     ConcatStringTree(const char * s);
-    ConcatStringTree(ConcatStringTree const &other) = delete; //copy constructor
+    ConcatStringTree(ConcatStringTree const &other)            = delete; //copy constructor
     ConcatStringTree(ConcatStringTree &&other);
     ~ConcatStringTree();
 private:
     ConcatStringTree(): root(nullptr), size(0), numOfnodes(0) {} //Cẩn thận với default vì khó kiểm soát, không được dùng tự tiện
 
 public:
-    int length() const;
-    char get(int index) const;
-    int indexOf(char c) const;
-    string toStringPreOrder() const;
-    string toString() const;
-    ConcatStringTree concat(const ConcatStringTree & otherS) const;
-    ConcatStringTree subString(int from, int to) const;
-    ConcatStringTree reverse() const;
-    int getParTreeSize(const string & query) const;
-    string getParTreeStringPreOrder(const string & query) const;
+    int length()                                                const;
+    char get(int index)                                         const;
+    int indexOf(char c)                                         const;
+    string toStringPreOrder()                                   const;
+    string toString()                                           const;
+    ConcatStringTree concat(const ConcatStringTree & otherS)    const;
+    ConcatStringTree subString(int from, int to)                const;
+    ConcatStringTree reverse()                                  const;
+    int getParTreeSize(const string & query)                    const;
+    string getParTreeStringPreOrder(const string & query)       const;
+
 private:
-    int recursiveLength(node* ) const;
-    char recursiveGet (int index, ConcatStringTree::node*) const;
+    int recursiveLength(node* )                                 const;
+    char recursiveGet (int index, ConcatStringTree::node*)      const;
     void setSize();
     void recursiveFind (char c, node* node, int currIndex, int& found) const;
-    string recursivetoStringPre(node* root) const;
-    string recursivetoString(node* root) const;
+    string recursivetoStringPre(node* root)                     const;
+    string recursivetoString(node* root)                        const;
     static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
     static node* recursiveSubstr(node* const &root, int from, int to);
     ConcatStringTree& operator= (ConcatStringTree &&); //move assignment
     ConcatStringTree& operator= (ConcatStringTree const &other) = delete;
+
 
 private:
     class node
@@ -56,10 +58,10 @@ private:
         int               rightLength{}; 
         ConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
         long id{};
-        static long maxID;
+        static long       maxID;
     private:
-        node *left{};
-        node *right{};
+        node *            left{};
+        node *            right{};
 
         //Constructors and Destructor
     public:
@@ -67,7 +69,6 @@ private:
         {
             if (maxID < MAX) id = ++maxID;
             else throw overflow_error("Id is overflow!");
-
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
 
@@ -77,7 +78,7 @@ private:
         //node& operator= (node &&other);
         ~node()
         {
-            std::cout << id << " is destroyed" << endl;
+            std::cout << id << " is destroyed while max = " << maxID << endl;
         }
 
         //Methods
