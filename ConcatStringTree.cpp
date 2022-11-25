@@ -128,8 +128,8 @@ string ConcatStringTree::recursivetoStringPre(node* root) const
     string s1 = root->data;
 	//(LL=0,L=5,"Hello");
 	if (s1 != "") 
-		s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",\"" + s1 + "\");" ;
-	else s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",<NULL>);";
+		s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length + root->leftLength + root->rightLength) +",\"" + s1 + "\");" ;
+	else s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length + root->leftLength + root->rightLength) +",<NULL>);";
 
     string s2 = recursivetoStringPre(root->getLeft());
     string s3 = recursivetoStringPre(root->getRight());
@@ -985,8 +985,8 @@ string ReducedConcatStringTree::recursivetoStringPre(node* root) const
     if (root->data) s1 = root->data->str;
 	//(LL=0,L=5,"Hello");
 	if (s1 != "") 
-		s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",\"" + s1 + "\");" ;
-	else s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",<NULL>);";
+		s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length + root->leftLength + root->rightLength) +",\"" + s1 + "\");" ;
+	else s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length + root->leftLength + root->rightLength) +",<NULL>);";
 
     string s2 = recursivetoStringPre(root->getLeft());
     string s3 = recursivetoStringPre(root->getRight());
