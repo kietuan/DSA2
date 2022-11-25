@@ -14,8 +14,8 @@ class LitString // một loại string mới dùng cho hash lưu trữ
     friend class LitStringHash;
     
 private:
-    std::string str{};
-    int numofLink{}; //chỉ có duy nhất ở đây bất thường, chỉ chính là số node đang trỏ tới nó
+    std::string  str{};
+    int          numofLink{}; //chỉ có duy nhất ở đây bất thường, chỉ chính là số node đang trỏ tới nó
 
 public:
     int length() const {return str.length();}
@@ -57,8 +57,8 @@ public:
     string  toStringPreOrder()                                             const;
     string  toString()                                                     const;
     ReducedConcatStringTree concat(const ReducedConcatStringTree & otherS) const;
-    ReducedConcatStringTree subString(int from, int to)                    const;
-    ReducedConcatStringTree reverse()                                      const;
+    //ReducedConcatStringTree subString(int from, int to)                    const;
+    //ReducedConcatStringTree reverse()                                      const;
     int     getParTreeSize(const string & query)                           const;
     string  getParTreeStringPreOrder(const string & query)                 const;
 private:
@@ -68,8 +68,8 @@ private:
     void recursiveFind (char c, node* node, int currIndex, int& found)     const;
     string recursivetoStringPre(node* root)                                const;
     string recursivetoString(node* root)                                   const;
-    static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
-    static node* recursiveSubstr(node* const &root, int from, int to);
+    //static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
+    //static node* recursiveSubstr(node* const &root, int from, int to);
     ReducedConcatStringTree& operator= (ReducedConcatStringTree &&); //move assignment
     
 };
@@ -152,24 +152,14 @@ private:
     node *right{};
 
 public:
-    node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
-        data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{(int)p->str.length()}
-    {
-        data->numofLink += 1;
-        
-
-        if (maxID < MAX) id = ++maxID;
-        else throw overflow_error("Id is overflow!");
-
-        parents = new ParentsTree();
-    }
+    node(LitString* p, LitStringHash* hash);  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
     ~node(); //khi xóa node phải tháo ra 
 
-    node()                         = delete;
-    node(node const &other)        = delete;
-    node& operator= (node &other)  = delete;
+    node()                              = delete;
+    node            (node const &other) = delete;
+    node& operator= (node const &other) = delete;
         //node& operator= (node &&other);
-    
+        
 
         //Methods
 public:
@@ -194,11 +184,20 @@ public:
 
 class HashConfig {
 private:
-    int p;
-    double c1, c2;
-    double lambda;
-    double alpha;
-    int initSize;
+    int    const p;
+    double const c1;
+    double const c2;
+    double const lambda;
+    double const alpha;
+    int    const initSize;
+
+public:
+    HashConfig(int p, double c1, double c2, double lambda, double alpha, int initSize):
+        p(p), c1(c1), c2(c2), lambda(lambda), alpha(alpha), initSize(initSize)
+    {
+        if (alpha < 1) throw ("Cannot create a smaller tabler after rehashing!");
+    }
+    HashConfig() = delete;
 
     friend class ReducedConcatStringTree;
     friend class LitStringHash;
@@ -214,11 +213,12 @@ private:
     LitString        *data{}; //bảng chứa các litstring
     STATUS_TYPE      *status{};
     int               size{};        // kích cỡ của bảng
-    HashConfig const &config{};
+    HashConfig const &config;
+    int               lastInserted{-1};
 
     //Constructors
     LitStringHash(const HashConfig & hashConfig): 
-        config{hashConfig}, size{0}, data{nullptr}, status{nullptr} {} //bảng hash vẫn chưa có gì đến khi được thêm vô
+        config{hashConfig}, size{0}, data{nullptr}, status{nullptr},  lastInserted{-1} {} //bảng hash vẫn chưa có gì đến khi được thêm vô
     LitStringHash() = delete;
 
     //Methods

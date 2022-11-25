@@ -13,6 +13,7 @@ concat:
 reduced:
 	$(CXX) testReduced.cpp ReducedConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o testReduced.o
 	./testReduced.o
+	rm *.o
 
 run: main
 	./main

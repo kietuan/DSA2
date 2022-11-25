@@ -48,6 +48,7 @@ int  LitStringHash:: insert(string const s) //không cho phép insert trùng nha
 		{
 			data[index] = LitString(s);
 			status[index] =  FILLED;
+			this->lastInserted = index;
             //return index;
 			break;
 		}
@@ -56,7 +57,10 @@ int  LitStringHash:: insert(string const s) //không cho phép insert trùng nha
 	//đến đây chắc chắn phải thêm được
 	int currSize = 0;
 	for (int i = 0; i < size; i++)	if (status[i] == FILLED) currSize++;
-	if ( (double)currSize/size > config.lambda) rehash();
+	if ( (double)currSize/size > config.lambda) {
+		rehash();
+		index = lastInserted = this->search(s); //tìm lại cái vừa thêm
+	}
 	return index;
 }
 int  LitStringHash::remove (string const s)
@@ -107,18 +111,22 @@ void LitStringHash::dellocateMem()
 }
 void LitStringHash::rehash()
 {
-	auto temp = new LitString[ int(size * config.alpha)]{};
-	for (int i = 0; i <size; i++) temp[i] = data[i];
-	delete[] data;
-	data = temp;
+	auto oldsize = size;
+	auto olddata = data;
+	auto oldstatus = status;
 
-	auto tempst = new STATUS_TYPE [ int(size * config.alpha)]{};
-	for (int i = 0; i <size; i++) tempst[i]= status[i];
-	for (int i = size; i < size * config.alpha; i++) tempst[i] = NIL;
-	delete[] status;
-	status = tempst;
+	size = int(size * config.alpha);
+	this->data   = new LitString   [size]{};
+	this->status = new STATUS_TYPE [size]{};
+	for (int i = 0; i <size; i++) status[i] = NIL;
 
-	size = size * config.alpha;
+	for (int i = 0; i = oldsize; i++)
+	{
+		if (oldstatus[i] == FILLED) this->insert(olddata[i].str);
+	}
+
+	delete[] olddata;
+	delete[] oldstatus;
 }
 
 bool LitString:: operator==(LitString const &other)
@@ -128,11 +136,18 @@ bool LitString:: operator==(LitString const &other)
 }
 
 //-----------------------------------------------------------------------Constructors cho Reduced---------------------------------------------------------
-ReducedConcatStringTree::ReducedConcatStringTree(const char * s, LitStringHash * litStringHash) : litStringHash{litStringHash}
+ReducedConcatStringTree::ReducedConcatStringTree(const char* s, LitStringHash *litStringHash): litStringHash{litStringHash}
 {
-	int index = litStringHash->insert(s);
-	//litStringHash->data[index] chứa phần tử mà ta mới thêm vô
-	root = new node(&(litStringHash->data[index]), litStringHash);
+	if (s == "")
+	{
+		root = new node (nullptr, nullptr);
+	}
+	else
+	{
+		int index = litStringHash->insert(s);
+		//litStringHash->data[index] chứa phần tử mà ta mới thêm vô
+		root = new node(&(litStringHash->data[index]), litStringHash);
+	}
 }
 
 ReducedConcatStringTree::ReducedConcatStringTree(ReducedConcatStringTree &&other):
@@ -156,6 +171,26 @@ ReducedConcatStringTree:: ~ReducedConcatStringTree()
 	this->root->removeParent(this->root);
 }
 
+ReducedConcatStringTree::node:: node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
+    data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{(int)p->str.length()}
+{
+	if (!this->data && this->hashTable) throw ("Wrong Initializion of node!");
+    if (data) data->numofLink += 1; //có thể có trường hợp khởi tạo data và hash đều là null, tức chuỗi rỗng
+
+    if (maxID < MAX) id = ++maxID;
+    else throw overflow_error("Id is overflow!");
+
+    parents = new ParentsTree();
+}
+
+ReducedConcatStringTree::node:: ~node()
+{
+	if (this->data)
+	{
+		this->data->numofLink -= 1;
+		if (this->data->numofLink == 0) hashTable->remove(data->str);
+	}
+}
 
 
 //-------------------------------------------------------------------------Hàm cho Reduced----------------------------------------------------------------
@@ -183,10 +218,12 @@ int ReducedConcatStringTree::node::getLength(node* node)
 void ReducedConcatStringTree::node::setLength(node* root) //đặt cho cả cây từ gốc, preorder
 {
     if (!root) return;
+	if (!root->data) root->length = 0;
+    else root->length = root->data->length();
 
-    root->length = root->data->length();
     root->leftLength = getLength(root->left);
     root->rightLength = getLength(root->right);
+
     setLength (root->left);
     setLength(root->right);
 }
@@ -227,9 +264,10 @@ void ReducedConcatStringTree::recursiveFind (char c, node* node, int currIndex, 
     {   
         if (!node) return;
 
-       if (node->getLeft()) 
+       	if (node->getLeft()) 
 			recursiveFind(c, node->getLeft(), currIndex - node->getLeft()->rightLength - node->getLeft()->length, found);
-        auto i = node->data->str.find(c);
+        size_t 			i =  string::npos;
+		if (node->data) i = node->data->str.find(c);
         if (i != string::npos && found == -1) //found
         {
             found = (int)i + currIndex;
@@ -251,7 +289,8 @@ string ReducedConcatStringTree::recursivetoStringPre(node* root) const
 {
     if (!root) return "";
 
-    string s1 = root->data->str;
+	string s1 = "";
+    if (root->data) s1 = root->data->str;
 	//(LL=0,L=5,"Hello");
 	if (s1 != "") 
 		s1 = "(LL=" + to_string(root->leftLength) + ",L=" + to_string(root->length) +",\"" + s1 + "\");" ;
@@ -271,16 +310,18 @@ string ReducedConcatStringTree::toString() const
 string ReducedConcatStringTree::recursivetoString(node* root) const
 {
     if (!root) return "";
-    string s1 = root->data->str;
+
+	string s1 = "";
+    if (root->data) s1 = root->data->str;
     string s2 = recursivetoString(root->getLeft());
     string s3 = recursivetoString(root->getRight());
     return s2 + s1 + s3;
 }
 
-/*
+
 ReducedConcatStringTree ReducedConcatStringTree::concat(const ReducedConcatStringTree & otherS) const //có tránh được copy constructor?
 {
-    ReducedConcatStringTree newstr("");
+    ReducedConcatStringTree newstr("", this->litStringHash); //có root chứa nullptr và nullptr
     newstr.root->assignLeft (this->root);
     newstr.root->assignRight (otherS.root);
 
@@ -290,7 +331,7 @@ ReducedConcatStringTree ReducedConcatStringTree::concat(const ReducedConcatStrin
 
     return newstr;
 }
-*/
+
 
 void ReducedConcatStringTree::node::assignLeft(node* p)
 {
@@ -660,8 +701,29 @@ void ReducedConcatStringTree::node:: removeParent(node* p) //xóa node p ra kh�
 	}
 }
 
-ReducedConcatStringTree::node:: ~node()
+
+//----------------------------------------------------------------------Hàm LitStringHash đề bài yêu cầu-------------------------------------------------------------
+int LitStringHash:: getLastInsertedIndex() const
 {
-	this->data->numofLink -= 1;
-	if (this->data->numofLink == 0) hashTable->remove(data->str);
+	if (!this->data) return -1;
+	else			 return lastInserted;
+}
+
+string LitStringHash::toString() const
+{
+	std::string s = "LitStringHash[";
+	std::string slot_list{};
+	for (int i = 0; i < size; i++)
+	{
+		if (status[i] == FILLED)
+		{
+			slot_list += "(litS=\"" + data[i].str + "\");" ;
+		}
+		else
+		{
+			slot_list += "();" ;
+		}
+	}
+	if (slot_list != "") slot_list.pop_back();
+	return s + slot_list + "]" ;
 }
