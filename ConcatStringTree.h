@@ -82,10 +82,10 @@ private:
         node            (node const &other) = delete;
         node& operator= (node const &other) = delete;
         //node& operator= (node &&other);
-        /*~node()
+        ~node() //test
         {
             std::cout << id << " is destroyed while max = " << maxID << endl;
-        }*/
+        }
 
         //Methods
     public:

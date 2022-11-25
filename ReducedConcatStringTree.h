@@ -4,6 +4,9 @@
 #define MAX 10000000UL
 
 #include "main.h"
+
+class ReducedConcatStringTree;                    //test
+void test(const ReducedConcatStringTree* const ); //test
 class ReducedConcatStringTree; // forward declaration
 class LitStringHash; // forward declaration
 class LitString;
@@ -20,7 +23,7 @@ private:
 public:
     int length() const {return str.length();}
 
-    bool operator==(LitString const &other);
+    bool operator==(LitString const &other) const;
 
     LitString(std::string s=""): str(s), numofLink(0) 
     {}
@@ -28,6 +31,7 @@ public:
 
 
 class ReducedConcatStringTree /* */ {
+    friend void test(const ReducedConcatStringTree* const );
     friend class LitString;
     friend class LitStringHash;
 private:
@@ -195,7 +199,8 @@ public:
     HashConfig(int p, double c1, double c2, double lambda, double alpha, int initSize):
         p(p), c1(c1), c2(c2), lambda(lambda), alpha(alpha), initSize(initSize)
     {
-        if (alpha < 1) throw ("Cannot create a smaller tabler after rehashing!");
+        if (alpha < 1.0) throw ("Cannot create a smaller tabler after rehashing!");
+        if (lambda > 1.0) throw ("Invalid load factor");
     }
     HashConfig() = delete;
 
@@ -213,13 +218,17 @@ private:
     LitString        *data{}; //bảng chứa các litstring
     STATUS_TYPE      *status{};
     int               size{};        // kích cỡ của bảng
-    HashConfig const &config;
+    HashConfig const  config;
     int               lastInserted{-1};
 
     //Constructors
+public:
     LitStringHash(const HashConfig & hashConfig): 
         config{hashConfig}, size{0}, data{nullptr}, status{nullptr},  lastInserted{-1} {} //bảng hash vẫn chưa có gì đến khi được thêm vô
-    LitStringHash() = delete;
+
+    LitStringHash()                                  = delete;
+    LitStringHash(LitStringHash const &)             = delete;
+    LitStringHash& operator= (LitStringHash const &) = delete;
 
     //Methods
 public:

@@ -12,7 +12,11 @@ void test(const ConcatStringTree* const p)
 }
 
 int main(int argc, char *argv[])
-{
+{	
+	ConcatStringTree s1 ("Hello");
+    ConcatStringTree s2 ("world");
+    ConcatStringTree s3 = s1.concat(s2);	
+
     
     return 0;
 }

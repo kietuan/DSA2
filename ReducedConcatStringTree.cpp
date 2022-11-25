@@ -96,6 +96,8 @@ void LitStringHash::allocateMem()
 		data = new LitString[size]{};
 		status = new STATUS_TYPE[size]{};
 		for (int i = 0; i < size; i++) status[i] = NIL;
+
+		std::cout << "Create new Hash Table" << endl; //test
 	}
 }
 void LitStringHash::dellocateMem()
@@ -107,6 +109,8 @@ void LitStringHash::dellocateMem()
 		data = nullptr;
 		status = nullptr;
 		size = 0;
+
+		std::cout << "Delete Hash Table" << endl; //test
 	}
 }
 void LitStringHash::rehash()
@@ -129,7 +133,7 @@ void LitStringHash::rehash()
 	delete[] oldstatus;
 }
 
-bool LitString:: operator==(LitString const &other)
+bool LitString:: operator==(LitString const &other) const
 {
 	if (this->str == other.str) return true;
 	return false;
@@ -148,6 +152,8 @@ ReducedConcatStringTree::ReducedConcatStringTree(const char* s, LitStringHash *l
 		//litStringHash->data[index] chứa phần tử mà ta mới thêm vô
 		root = new node(&(litStringHash->data[index]), litStringHash);
 	}
+	size = root->length;
+	this->root->parents->insert(this->root);
 }
 
 ReducedConcatStringTree::ReducedConcatStringTree(ReducedConcatStringTree &&other):
@@ -172,9 +178,12 @@ ReducedConcatStringTree:: ~ReducedConcatStringTree()
 }
 
 ReducedConcatStringTree::node:: node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
-    data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}, length{(int)p->str.length()}
+    data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}
 {
 	if (!this->data && this->hashTable) throw ("Wrong Initializion of node!");
+	if (data) this->length = (int)p->str.length();
+	else this->length = 0;
+
     if (data) data->numofLink += 1; //có thể có trường hợp khởi tạo data và hash đều là null, tức chuỗi rỗng
 
     if (maxID < MAX) id = ++maxID;
@@ -190,6 +199,7 @@ ReducedConcatStringTree::node:: ~node()
 		this->data->numofLink -= 1;
 		if (this->data->numofLink == 0) hashTable->remove(data->str);
 	}
+	std::cout << "Destroy " << id << " while max = " << maxID << endl; //test
 }
 
 

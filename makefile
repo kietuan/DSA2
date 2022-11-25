@@ -9,11 +9,12 @@ all:
 concat:
 	$(CXX) testConcat.cpp ConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o testConcat.o
 	./testConcat.o
+	rm testConcat.o
 
 reduced:
 	$(CXX) testReduced.cpp ReducedConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o testReduced.o
 	./testReduced.o
-	rm *.o
+	rm testReduced.o
 
 run: main
 	./main
