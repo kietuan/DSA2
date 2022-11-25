@@ -60,15 +60,15 @@ private:
         int               leftLength{};
         int               rightLength{}; 
         ConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
-        long id{};
-        static long       maxID;
+        unsigned long id{};
+        static unsigned long       maxID;
     private:
         node *            left{};
         node *            right{};
 
         //Constructors and Destructor
     public:
-        node(string str): data{str}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}, length{(int)str.length()}
+        node(string str): data{str}, length{(int)str.length()}, leftLength{0},rightLength{0}, left{nullptr}, right{nullptr}
         {
             if (maxID < MAX) id = ++maxID;
             else throw overflow_error("Id is overflow!");
@@ -157,7 +157,7 @@ private:
             parentsNode* left{};
             parentsNode* right{};
 
-            parentsNode(ConcatStringTree::node* p = nullptr): data(p), left(nullptr), right(nullptr), balance(E)
+            parentsNode(ConcatStringTree::node* p = nullptr): data(p), balance(E), left(nullptr), right(nullptr)
             {}
         };
     };
@@ -293,7 +293,7 @@ private:
         parentsNode*                   left{};
         parentsNode*                   right{};
 
-        parentsNode(ReducedConcatStringTree::node* p = nullptr): data(p), left(nullptr), right(nullptr), balance(E)
+        parentsNode(ReducedConcatStringTree::node* p = nullptr): data(p), balance(E), left(nullptr), right(nullptr)
         {}
     };
 };
@@ -309,8 +309,8 @@ public:
     int leftLength{};
     int rightLength{}; 
     ReducedConcatStringTree::ParentsTree* parents{}; //chứa các node chỉ đến nó?, chỉ có thể là con trỏ chứ không thể là 1 class hoàn chỉnh được
-    long id{};
-    static long maxID;
+    unsigned long id{};
+    static unsigned long maxID;
 private:
     node *left{};
     node *right{};
@@ -384,7 +384,7 @@ private:
     //Constructors
 public:
     LitStringHash(const HashConfig & hashConfig): 
-        config{hashConfig}, size{0}, data{nullptr}, status{nullptr},  lastInserted{-1} {} //bảng hash vẫn chưa có gì đến khi được thêm vô
+        data{nullptr}, status{nullptr}, size{0}, config{hashConfig}, lastInserted{-1} {} //bảng hash vẫn chưa có gì đến khi được thêm vô
 
     LitStringHash()                                  = delete;
     LitStringHash(LitStringHash const &)             = delete;

@@ -23,7 +23,8 @@ void test(const ReducedConcatStringTree* const p)
 }
 
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+int main()
 {	
 	ConcatStringTree s1 ("Hello");
     ConcatStringTree s2 ("world");

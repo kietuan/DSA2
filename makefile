@@ -1,9 +1,9 @@
 CXX = g++
-FLAG = -pedantic-errors -Werror -g -O0
+FLAG = -pedantic-errors -Werror -Wall -Wextra -g -O0
 
 
 all: 
-	$(CXX) main.cpp ConcatStringTree.cpp  $(FLAG) -I . -std=c++11 -o main.o
+	$(CXX)  $(FLAG) -I . -std=c++11 main.cpp ConcatStringTree.cpp -o main.o
 	./main.o
 	rm main.o
 

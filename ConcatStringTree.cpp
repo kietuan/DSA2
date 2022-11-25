@@ -1,5 +1,5 @@
 #include "ConcatStringTree.h"
-long ConcatStringTree::node::maxID{0}; //because there is no before
+unsigned long ConcatStringTree::node::maxID{0}; //because there is no before
 
 
 //Constructors and Destructor of ConcatStringTree
@@ -569,7 +569,7 @@ void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatString
 	            else if (node->balance == L) {node->balance = E; shorter = true;}
 	            else if (node->balance == E){ node->balance = R; shorter = false;}
 	        }
-	        else if (!shorter); //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
+	        else if (!shorter) {;} //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
 	    }
 	    
 	}
@@ -587,7 +587,7 @@ void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatString
 	            else if (node->balance == R) {node->balance = E; shorter = true;}
 	            else if (node->balance == E){ node->balance = L; shorter = false;}
 	        }
-	        else if (!shorter); //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
+	        else if (!shorter){;} //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
 	    }
 	}
 }
@@ -620,7 +620,7 @@ void ConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node
 	//có thể p đang trỏ tới this
 	//if (p->left == this) 	   p->left = nullptr;
 	//else if (p->right == this) p->right = nullptr;
-	if(!this) return;
+	//if(!this) return;
 	this->parents->remove(p); //có thể không thành công nếu p không tồn tại trong cây
 	if (this->parents->isEmpty())
 	{
@@ -652,7 +652,7 @@ string ConcatStringTree::ParentsTree::nodelistPre(const parentsNode* const &root
 int ConcatStringTree::getParTreeSize(const string & query) const
 {
 	node *temp = root;
-	for(int i = 0; i < query.length(); i++)
+	for(int i = 0; i < static_cast<int>(query.length()); i++)
 	{	 
 		if (query[i] != 'l' && query[i] != 'r') throw runtime_error("Invalid character of query");
 		if (!temp) 								throw runtime_error("Invalid query: reaching NULL");
@@ -666,7 +666,7 @@ int ConcatStringTree::getParTreeSize(const string & query) const
 string ConcatStringTree::getParTreeStringPreOrder(const string & query) const
 {
 	node *temp = root;
-	for(int i = 0; i < query.length(); i++)
+	for(int i = 0; i < static_cast<int>(query.length()); i++)
 	{	 
 		if (!temp) throw runtime_error("Invalid query: reaching NULL");
 		if (query[i] == 'l') temp = temp->getLeft();
@@ -684,7 +684,7 @@ string ConcatStringTree::getParTreeStringPreOrder(const string & query) const
 
 
 //--------------------------------------------------------Bài 3------------------------------------------------------------------
-long ReducedConcatStringTree::node::maxID{0}; //because there is no before
+unsigned long ReducedConcatStringTree::node::maxID{0}; //because there is no before
 
 //--------------------------------------------Hàm cho Hash-----------------------------------------
 int LitStringHash::hashFucntion(string const key) const
@@ -692,7 +692,7 @@ int LitStringHash::hashFucntion(string const key) const
     if (key == "") throw ("Cannot hash a null string");
     int power = 1;
     int res = 0;
-    for (int i = 0; i < key.length(); i++)
+    for (int i = 0; i < static_cast<int>(key.length()); i++)
     {
         res += (int)key[i] * power;
         power *= config.p;
@@ -807,7 +807,7 @@ void LitStringHash::rehash()
 	this->status = new STATUS_TYPE [size]{};
 	for (int i = 0; i <size; i++) status[i] = NIL;
 
-	for (int i = 0; i = oldsize; i++)
+	for (int i = 0; i < oldsize; i++)
 	{
 		if (oldstatus[i] == FILLED) this->insert(olddata[i].str);
 	}
@@ -825,7 +825,7 @@ bool LitString:: operator==(LitString const &other) const
 //-----------------------------------------------------------------------Constructors cho Reduced---------------------------------------------------------
 ReducedConcatStringTree::ReducedConcatStringTree(const char* s, LitStringHash *litStringHash): litStringHash{litStringHash}
 {
-	if (s == "")
+	if (static_cast<int>(s[0]) == 0)
 	{
 		root = new node (nullptr, nullptr);
 	}
@@ -861,7 +861,7 @@ ReducedConcatStringTree:: ~ReducedConcatStringTree()
 }
 
 ReducedConcatStringTree::node:: node(LitString* p, LitStringHash* hash) :  //node này trỏ tới p, nhưng p đã có sẵn nên quan tâm là thêm p vào như thế nào
-    data{p}, hashTable{hash}, left{nullptr}, right{nullptr},  leftLength{0},rightLength{0}
+    data{p}, hashTable{hash}, leftLength{0}, rightLength{0}, left{nullptr}, right{nullptr}
 {
 	if (!this->data && this->hashTable) throw ("Wrong Initializion of node!");
 	if (data) this->length = (int)p->str.length();
@@ -1349,7 +1349,7 @@ void ReducedConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  Reduc
 	            else if (node->balance == L) {node->balance = E; shorter = true;}
 	            else if (node->balance == E){ node->balance = R; shorter = false;}
 	        }
-	        else if (!shorter); //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
+	        else if (!shorter){;} //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
 	    }
 	    
 	}
@@ -1367,7 +1367,7 @@ void ReducedConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  Reduc
 	            else if (node->balance == R) {node->balance = E; shorter = true;}
 	            else if (node->balance == E){ node->balance = L; shorter = false;}
 	        }
-	        else if (!shorter); //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
+	        else if (!shorter) {;} //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
 	    }
 	}
 }
@@ -1382,7 +1382,7 @@ bool ReducedConcatStringTree::ParentsTree:: isEmpty() const
 
 void ReducedConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node cha của this
 {
-	if(!this) return;
+	//if(!this) return;
 	this->parents->remove(p); //có thể không thành công nếu p không tồn tại trong cây
 	if (this->parents->isEmpty())
 	{
