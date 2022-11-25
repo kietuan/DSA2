@@ -8,7 +8,7 @@ class ConcatStringTree;
 void test(const ConcatStringTree* const );
 
 class ConcatStringTree {
-    friend void test_indexof(const ConcatStringTree* const );
+    friend void test(const ConcatStringTree* const );
 
     class node; //forward declare
     class ParentsTree;
@@ -45,9 +45,9 @@ private:
     void recursiveFind (char c, node* node, int currIndex, int& found) const;
     string recursivetoStringPre(node* root)                     const;
     string recursivetoString(node* root)                        const;
-    static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
+    static node* recursiveReverse(node* const &root) ;                  //trả về 1 node mới và 1 cây mới từ đó
     static node* recursiveSubstr(node* const &root, int from, int to);
-    ConcatStringTree& operator= (ConcatStringTree &&); //move assignment
+    ConcatStringTree& operator= (ConcatStringTree &&);                  //move assignment
     ConcatStringTree& operator= (ConcatStringTree const &other) = delete;
 
 
@@ -78,14 +78,14 @@ private:
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
 
-        node()                        = delete;
-        node(node const &other)       = delete;
-        node& operator= (node &other) = delete;
+        node()                              = delete;
+        node            (node const &other) = delete;
+        node& operator= (node const &other) = delete;
         //node& operator= (node &&other);
-        ~node()
+        /*~node()
         {
             std::cout << id << " is destroyed while max = " << maxID << endl;
-        }
+        }*/
 
         //Methods
     public:

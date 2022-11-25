@@ -46,31 +46,32 @@ public:
     ReducedConcatStringTree(ReducedConcatStringTree &&other);
    ~ReducedConcatStringTree();
 
-    ReducedConcatStringTree(ReducedConcatStringTree const &other) = delete;
-    ReducedConcatStringTree() = delete;
+    ReducedConcatStringTree(ReducedConcatStringTree const &other)             = delete;
+    ReducedConcatStringTree()                                                 = delete;
+    ReducedConcatStringTree& operator= (ReducedConcatStringTree const &other) = delete;
     //Methods
 public:
-    int     length() const;
-    char    get(int index) const;
-    int     indexOf(char c) const;
-    string  toStringPreOrder() const;
-    string  toString() const;
+    int     length()                                                       const;
+    char    get(int index)                                                 const;
+    int     indexOf(char c)                                                const;
+    string  toStringPreOrder()                                             const;
+    string  toString()                                                     const;
     ReducedConcatStringTree concat(const ReducedConcatStringTree & otherS) const;
-    ReducedConcatStringTree subString(int from, int to) const;
-    ReducedConcatStringTree reverse() const;
-    int     getParTreeSize(const string & query) const;
-    string  getParTreeStringPreOrder(const string & query) const;
+    ReducedConcatStringTree subString(int from, int to)                    const;
+    ReducedConcatStringTree reverse()                                      const;
+    int     getParTreeSize(const string & query)                           const;
+    string  getParTreeStringPreOrder(const string & query)                 const;
 private:
-    int recursiveLength(node* ) const;
-    char recursiveGet (int index, ReducedConcatStringTree::node*) const;
+    int recursiveLength(node* )                                            const;
+    char recursiveGet (int index, ReducedConcatStringTree::node*)          const;
     void setSize();
-    void recursiveFind (char c, node* node, int currIndex, int& found) const;
-    string recursivetoStringPre(node* root) const;
-    string recursivetoString(node* root) const;
+    void recursiveFind (char c, node* node, int currIndex, int& found)     const;
+    string recursivetoStringPre(node* root)                                const;
+    string recursivetoString(node* root)                                   const;
     static node* recursiveReverse(node* const &root) ; //trả về 1 node mới và 1 cây mới từ đó
     static node* recursiveSubstr(node* const &root, int from, int to);
     ReducedConcatStringTree& operator= (ReducedConcatStringTree &&); //move assignment
-    ReducedConcatStringTree& operator= (ReducedConcatStringTree const &other) = delete;
+    
 };
 
 
