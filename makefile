@@ -1,5 +1,5 @@
 CXX = g++
-FLAG = -pedantic-errors -Werror -Wall -Wextra -g -O0
+FLAG = -pedantic-errors -Werror -Wall -Wextra -Weffc++ -g -O0
 
 
 all: 
