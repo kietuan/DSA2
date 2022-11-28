@@ -318,7 +318,7 @@ void ConcatStringTree::ParentsTree:: remove(node* const node)
 {
     bool success = false, shorter = false;
     removeRec(this->root, node, shorter, success);
-	if (success) print();
+	//if (success) print();
 }
 
 
