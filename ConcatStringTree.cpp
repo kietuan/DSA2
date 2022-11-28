@@ -318,6 +318,7 @@ void ConcatStringTree::ParentsTree:: remove(node* const node)
 {
     bool success = false, shorter = false;
     removeRec(this->root, node, shorter, success);
+	if (success) print();
 }
 
 
@@ -552,7 +553,25 @@ void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatString
 	        
 	        node->data = temp->data;
 	        removeRec(node->left, temp->data, shorter, success);
-	        //here, shorter = true and success = true.....
+	        //here, shorter = ? and success = true.....
+			//lúc này đã xóa thành công 1 node cây con bên trái
+			if (shorter)
+			{
+				if (node->balance == E)
+				{
+					node->balance = R;
+					shorter = false;
+				}
+				else if (node->balance == L)
+				{
+					node->balance = E;
+					shorter = true;
+				}
+				else if (node->balance == R)
+				{
+					removeRightBalance(node, shorter);
+				}
+			}
 	    }
 	}
 	else if (node->data->id > p->id)
@@ -604,15 +623,11 @@ bool ConcatStringTree::ParentsTree:: isEmpty() const
 	if (root) return false;
 	else return true;
 }
-/* cho rằng hàm node không cần destructor vì không nắm giữ con trỏ nào quan trọng
-ConcatStringTree::node:: ~node()
+/*ConcatStringTree::node:: ~node()
 {
-	if (this->parents->isEmpty())
-	{
-
-	}
-}
-*/
+	//test
+	cout << "Destroy "<<id << " while max = " << maxID <<endl;
+}*/
 
 //help function cho việc hủy cây, ~Concatstringtree
 void ConcatStringTree::node:: removeParent(node* p) //xóa node p ra khỏi node cha của this
@@ -1332,7 +1347,24 @@ void ReducedConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  Reduc
 	        
 	        node->data = temp->data;
 	        removeRec(node->left, temp->data, shorter, success);
-	        //here, shorter = true and success = true.....
+	        //here, shorter = ?? and success = true.....
+			if (shorter)
+			{
+				if (node->balance == E)
+				{
+					node->balance = R;
+					shorter = false;
+				}
+				else if (node->balance == L)
+				{
+					node->balance = E;
+					shorter = true;
+				}
+				else if (node->balance == R)
+				{
+					removeRightBalance(node, shorter);
+				}
+			}
 	    }
 	}
 	else if (node->data->id > p->id)
