@@ -74,6 +74,7 @@ private:
             else throw overflow_error("Id is overflow!");
             parents = new ParentsTree(); //khởi tạo từ 1 string, data, do đó không có gì thì không có PArrents, cây parents rỗng, root là nullptr
         }
+        //~node();//test
 
         node()                              = delete;
         node            (node const &other) = delete;
@@ -132,6 +133,28 @@ private:
         void insert(ConcatStringTree::node* const node);
         bool isEmpty() const;
         void remove(ConcatStringTree::node* const node);
+        
+        void print() const 
+        {
+            if(root != nullptr)_print_recur("", this->root, false);
+        }
+        void _print_recur(const std::string& prefix, parentsNode* const node, bool isLeft) const
+        {
+            /*From: https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c*/
+            if (node) {
+                std::cout << prefix;
+
+                std::cout << (isLeft ? "├──" : "└──" );
+
+                // print the value of the node
+                std::cout << node->balance << '\n';
+
+                // enter the next tree level - left and right branch
+                _print_recur(prefix + (isLeft ? "│   " : "    "), node->left, true);
+                _print_recur(prefix + (isLeft ? "│   " : "    "), node->right, false);
+            }
+        }
+        
 
     private:
         
