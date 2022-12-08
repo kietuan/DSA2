@@ -366,6 +366,7 @@ void ConcatStringTree::ParentsTree::rightBalance(parentsNode *&node, bool &talle
 	            node->right->balance =R;
 	        }
 	        rotateRight(node->right);
+			rotateLeft(node);
 	    }
 	    taller = false;
 	}
@@ -1160,6 +1161,7 @@ void ReducedConcatStringTree::ParentsTree::rightBalance(parentsNode *&node, bool
 	            node->right->balance =R;
 	        }
 	        rotateRight(node->right);
+			rotateLeft(node);
 	    }
 	    taller = false;
 	}
