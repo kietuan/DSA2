@@ -47,6 +47,7 @@ void tcHoc()
     ReducedConcatStringTree *concat8 = new ReducedConcatStringTree(test1->concat(*test9));
     ReducedConcatStringTree *concat9 = new ReducedConcatStringTree(test1->concat(*test10));
     cout << litStringHash->toString() << endl;
+    cout<< test1->toString() << endl;
     cout << litStringHash->getLastInsertedIndex() << endl;
     cout << test1->getParTreeStringPreOrder("") << " " << test1->getParTreeSize("") << endl;
     cout << test1 -> toString();
