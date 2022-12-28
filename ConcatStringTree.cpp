@@ -589,7 +589,6 @@ void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatString
 	            else if (node->balance == L) {node->balance = E; shorter = true;}
 	            else if (node->balance == E){ node->balance = R; shorter = false;}
 	        }
-	        else if (!shorter) {;} //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
 	    }
 	    
 	}
@@ -607,7 +606,6 @@ void ConcatStringTree::ParentsTree::removeRec(parentsNode*& node ,  ConcatString
 	            else if (node->balance == R) {node->balance = E; shorter = true;}
 	            else if (node->balance == E){ node->balance = L; shorter = false;}
 	        }
-	        else if (!shorter){;} //cây bên trái không thay đổi gì -> không ảnh hưởng tới sự cân bằng ở node đó
 	    }
 	}
 }
